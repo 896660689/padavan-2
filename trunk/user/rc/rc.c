@@ -830,7 +830,7 @@ void
 handle_notifications(void)
 {
 	int i, stop_handle = 0;
-	char notify_name[300];
+	char notify_name[256];
 
 	DIR *directory = opendir(DIR_RC_NOTIFY);
 	if (!directory)

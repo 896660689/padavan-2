@@ -34,7 +34,7 @@ struct nvram_pair router_defaults[] = {
 
 	/* Miscellaneous parameters */
 	{ "time_zone", DEF_TIMEZONE },
-	{ "log_float_ui", "1" },		/* WebUI syslog float panel mode */
+	{ "log_float_ui", "0" },		/* WebUI syslog float panel mode */
 	{ "log_ipaddr", "" },			/* syslog recipient IP */
 	{ "log_port", "514" },			/* syslog recipient Port */
 	{ "log_level", "0" },			/* Bitmask 0:off 1:denied 2:accepted */
@@ -78,7 +78,7 @@ struct nvram_pair router_defaults[] = {
 	{ "wan_ttl_value", "0" },
 	{ "wan_hwaddr_x", "" },
 	{ "wan_nat_x", "1" },
-	{ "wan_mtu", "1500" },
+	{ "wan_mtu", "1492" },
 	{ "wan_auth_mode", "0" },
 	{ "wan_auth_user", "" },
 	{ "wan_auth_pass", "" },
@@ -149,11 +149,11 @@ struct nvram_pair router_defaults[] = {
 	{ "http_username", SYS_USER_ROOT },	/* Username */
 	{ "http_passwd", DEF_ROOT_PASSWORD },	/* Password */
 	{ "http_access", "0" },			/* HTTP access (0: ALL, 1: LAN only, 2: LAN + Wireless MainAP) */
-	{ "http_proto", "0" },			/* HTTP proto (0: HTTP, 1: HTTPS, 2: Both) */
+	{ "http_proto", "2" },			/* HTTP proto (0: HTTP, 1: HTTPS, 2: Both) */
 	{ "http_lanport", "80" },		/* HTTP LAN port to listen on */
 	{ "https_lport", "443" },		/* HTTPS LAN port to listen on */
 	{ "https_clist", DEF_HTTPS_CIPH_LIST },	/* HTTPS SSL cipher list */
-	{ "fw_dos_x", "0" },			// oleg patch
+	{ "fw_dos_x", "1" },			// oleg patch
 	{ "dr_enable_x", "1" },			// oleg patch
 	{ "mr_enable_x", "0" },			// oleg patch
 	{ "mr_qleave_x", "1" },
@@ -195,9 +195,9 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_radius_ipaddr", ""},		/* RADIUS server IP address */
 	{ "wl_radius_port", "1812" },		/* RADIUS server UDP port */
 	{ "wl_radius_key", "" },		/* RADIUS shared secret */
-	{ "wl_radio_x", "1" },			/* Enable (1) or disable (0) radio */
+	{ "wl_radio_x", "0" },			/* Enable (1) or disable (0) radio */
 	{ "wl_IgmpSnEnable", "1" },
-	{ "wl_TxPower", "100" },
+	{ "wl_TxPower", "90" },
 	{ "wl_TxBurst", "1" },
 	{ "wl_PktAggregate", "1" },
 	{ "wl_APSDCapable", "0" },
@@ -207,7 +207,7 @@ struct nvram_pair router_defaults[] = {
 #else
 	{ "wl_HT_BW", "1" },
 #endif
-	{ "wl_txbf", "1" },
+	{ "wl_txbf", "0" },
 	{ "wl_ssid2",  DEF_WLAN_5G_SSID },
 	{ "wl_mode_x", "0" },
 	{ "wl_wdsapply_x", "0" },
@@ -279,7 +279,7 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_gmode", "5" },			/* g/n mixed */
 #endif
 	{ "rt_mcs_mode", "0" },
-	{ "rt_channel", "0" },
+	{ "rt_channel", "13" },
 	{ "rt_bcn", "100" },
 	{ "rt_dtim", "1" },
 	{ "rt_gmode_protection", "auto" },
@@ -296,7 +296,7 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_wme", "1" },
 	{ "rt_wme_no_ack", "off" },
 	{ "rt_IgmpSnEnable", "1" },
-	{ "rt_TxPower", "100" },
+	{ "rt_TxPower", "85" },
 	{ "rt_TxBurst", "1" },
 	{ "rt_PktAggregate", "1" },
 	{ "rt_APSDCapable", "0" },
@@ -379,7 +379,7 @@ struct nvram_pair router_defaults[] = {
 	{ "acc_num", "0" },
 	{ "enable_ftp", "0" },
 	{ "enable_samba", "0" },
-	{ "st_samba_fp", "0" },
+	{ "st_samba_fp", "1" },
 	{ "st_samba_mode", "1" },
 	{ "st_samba_lmb", "1" },
 	{ "st_samba_workgroup", DEF_SMB_WORKGROUP },
@@ -419,7 +419,7 @@ struct nvram_pair router_defaults[] = {
 	{ "hdd_spindt", "0" },
 	{ "hdd_apmoff", "0" },
 
-	{ "ip6_service", "dhcp6" },			/* IPV6 */
+	{ "ip6_service", "" },			/* IPV6 */
 	{ "ip6_wan_if", "0" },
 
 	{ "ip6_6in4_remote", "" },
@@ -436,22 +436,22 @@ struct nvram_pair router_defaults[] = {
 	{ "ip6_wan_size", "64" },
 	{ "ip6_wan_gate", "" },
 
-	{ "ip6_dns_auto", "0" },
+	{ "ip6_dns_auto", "1" },
 	{ "ip6_dns1", "" },
 	{ "ip6_dns2", "" },
 	{ "ip6_dns3", "" },
 
-	{ "ip6_lan_auto", "0" },
+	{ "ip6_lan_auto", "1" },
 	{ "ip6_lan_addr", "" },
 	{ "ip6_lan_size", "64" },
 	{ "ip6_lan_radv", "1" },
-	{ "ip6_lan_dhcp", "1" },
+	{ "ip6_lan_dhcp", "3" },
 	{ "ip6_lan_sflt", "1800" },
 	{ "ip6_lan_sfps", "4096" }, // 0x1000
 	{ "ip6_lan_sfpe", "4352" }, // 0x1100
 
 	{ "upnp_enable_x", "1" },
-	{ "upnp_proto", "0" },
+	{ "upnp_proto", "2" },
 	{ "upnp_secure", "1" },
 	{ "upnp_clean_min", "10" },
 	{ "upnp_clean_int", "600" },
@@ -635,7 +635,7 @@ struct nvram_pair router_defaults[] = {
 	{ "v2_tls", "0" },
 	{ "v2_mux", "0" },
 	
-	/*SS ËÆ¢ÈòÖ*/
+	/*SS ∂©‘ƒ*/
 	{ "ss_list", "0" },
 	{ "d_server", "" },
 	{ "d_port", "" },
@@ -659,7 +659,7 @@ struct nvram_pair router_defaults[] = {
 	{ "d_keyword_n", "" },
 	{ "d_keyword_y", "" },
 	{ "d_update_link", "" },
-	{ "ss_keyword", "ËøáÊúüÊó∂Èó¥/Ââ©‰ΩôÊµÅÈáè" },
+	{ "ss_keyword", "π˝∆⁄ ±º‰/ £”‡¡˜¡ø" },
 #endif
 	
 	/*Adbyby PlUS+*/
@@ -780,7 +780,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ddnsto_id", "" },
 
 #if defined(APP_ALDRIVER)
-	/*ÈòøÈáå‰∫ëÁõò*/
+	/*∞¢¿Ô‘∆≈Ã*/
 	{ "aliyundrive_enable", "0" },
 	{ "ald_refresh_token", "" },
 	{ "ald_auth_user", "" },
@@ -867,8 +867,8 @@ struct nvram_pair router_defaults[] = {
 #endif
 
 	/* DHCP server parameters */
-	{ "dhcp_start", DEF_LAN_DHCP_BEG },	/* First assignable DHCP address */
-	{ "dhcp_end", DEF_LAN_DHCP_END },	/* Last assignable DHCP address */
+	{ "dhcp_start", "192.168.2.2" },	/* First assignable DHCP address */
+	{ "dhcp_end", "192.168.2.80" },		/* Last assignable DHCP address */
 	{ "dhcp_enable_x", "1" },
 	{ "dhcp_lease", "86400" },
 	{ "dhcp_gateway_x", "" },
@@ -890,7 +890,7 @@ struct nvram_pair router_defaults[] = {
 
 	/* DDNS parameters */
 	{ "ddns_enable_x", "0" },
-	{ "ddns_server_x", "" },
+	{ "ddns_server_x", "WWW.PUBYUN.COM" },
 	{ "ddns_username_x", "" },
 	{ "ddns_passwd_x", "" },
 	{ "ddns_hostname_x", "" },
@@ -904,15 +904,15 @@ struct nvram_pair router_defaults[] = {
 	{ "ddns_period", "24" },
 	{ "ddns_forced", "10" },
 	{ "ddns_verbose", "1" },
-	{ "ddns_source", "0" },
+	{ "ddns_source", "1" },
 	{ "ddns_checkip", "0" },
 	{ "ddns2_checkip", "0" },
-	{ "ddns_ssl", "0" },
+	{ "ddns_ssl", "1" },
 	{ "ddns2_server", "" },
 	{ "ddns2_hname", "" },
 	{ "ddns2_user", "" },
 	{ "ddns2_pass", "" },
-	{ "ddns2_ssl", "0" },
+	{ "ddns2_ssl", "1" },
 	{ "asusddns_tos_agreement", "0" },
 
 	{ "preferred_lang", "CN" },
@@ -957,7 +957,7 @@ struct nvram_pair router_defaults[] = {
 	{ "di_timeout", "2" },
 	{ "di_time_done", "30" },
 	{ "di_time_fail", "5" },
-	{ "di_lost_delay", "1" },
+	{ "di_lost_delay", "10" },
 	{ "di_lost_action", "0" },
 	{ "di_recon_pause", "0" },
 	{ "di_addr0", "114.114.114.114" },
@@ -987,7 +987,7 @@ struct nvram_pair router_defaults[] = {
 	{ "lltd_enable", "1" },
 	{ "adsc_enable", "0" },
 	{ "crond_enable", "1" },
-	{ "crond_log", "0" },
+	{ "crond_log", "1" },
 
 #if defined(BOARD_N65U)
 	{ "inic_disable", "0" },
@@ -1009,11 +1009,11 @@ struct nvram_pair router_defaults[] = {
 	{ "front_led_all", "1" },
 	{ "front_led_wan", "2" },
 	{ "front_led_lan", "2" },
-	{ "front_led_wif", "1" },
+	{ "front_led_wif", "0" },
 	{ "front_led_usb", "1" },
 	{ "front_led_pwr", "1" },
 
-	{ "ether_igmp", "1" },
+	{ "ether_igmp", "0" },
 	{ "ether_uport", "0" },		/* WAN port in AP mode is static upstream by default */
 	{ "ether_m2u", "2" },
 	{ "ether_green", "1" },
@@ -1054,7 +1054,7 @@ struct nvram_pair router_defaults[] = {
 #if defined(USE_SFE)
 	{ "sfe_enable", "2" },
 #endif
-	{ "fw_syn_cook", "0" },
+	{ "fw_syn_cook", "1" },
 	{ "fw_mac_drop", "0" },
 	{ "nf_nat_type", "2" },
 	{ "nf_nat_loop", "1" },
@@ -1071,16 +1071,16 @@ struct nvram_pair router_defaults[] = {
 	{ "nf_alg_h323", "0" },
 	{ "nf_alg_sip", "0" },
 
-	{ "help_enable", "1" },
+	{ "help_enable", "0" },
 
 	{ "vpns_enable", "0" },
-	{ "vpns_type", "0" },
+	{ "vpns_type", "2" },
 	{ "vpns_cast", "0" },
 	{ "vpns_auth", "0" },
 	{ "vpns_mppe", "1" },
 	{ "vpns_mtu", "1450" },
 	{ "vpns_mru", "1450" },
-	{ "vpns_vuse", "0" },
+	{ "vpns_vuse", "2" },
 	{ "vpns_vnet", "10.8.0.0" },
 	{ "vpns_actl", "0" },
 	{ "vpns_cli0", "245" },
@@ -1104,7 +1104,7 @@ struct nvram_pair router_defaults[] = {
 	{ "vpnc_dgw", "0" },
 
 	{ "vpns_ov_mode", "1" },
-	{ "vpns_ov_prot", "0" },
+	{ "vpns_ov_prot", "1" },
 	{ "vpns_ov_port", "1194" },
 	{ "vpns_ov_mdig", "1" },
 	{ "vpns_ov_ciph", "15" },
@@ -1112,7 +1112,7 @@ struct nvram_pair router_defaults[] = {
 	{ "vpns_ov_compress", "2" },
 	{ "vpns_ov_atls", "0" },
 	{ "vpns_ov_tcv2", "0" },
-	{ "vpns_ov_rdgw", "0" },
+	{ "vpns_ov_rdgw", "1" },
 	{ "vpnc_ov_mode", "1" },
 	{ "vpnc_ov_cnat", "0" },
 	{ "vpnc_ov_prot", "0" },

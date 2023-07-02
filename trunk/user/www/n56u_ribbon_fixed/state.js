@@ -178,21 +178,21 @@ function showSystemInfo(cpu_now,force){
 	$j("#mem_info").html(bytesToSize(sysinfo.ram.free*1024, 2) + " / " + bytesToSize(sysinfo.ram.total*1024, 2));
 	$j("#uptime_info").html(sysinfo.uptime.days + "<#Day#>".substring(0,1) + " " + h+"<#Hour#>".substring(0,1) + " " + m+"<#Minute#>".substring(0,1));
 
-	$j("#cpu_usage tr:nth-child(1) td:first").html('busy: '+cpu_now.busy+'%');
-	$j("#cpu_usage tr:nth-child(2) td:first").html('user: '+cpu_now.user+'%');
-	$j("#cpu_usage tr:nth-child(2) td:last").html('system: '+cpu_now.system+'%');
-	$j("#cpu_usage tr:nth-child(3) td:first").html('sirq: '+cpu_now.sirq+'%');
-	$j("#cpu_usage tr:nth-child(3) td:last").html('irq: '+cpu_now.irq+'%');
-	$j("#cpu_usage tr:nth-child(4) td:first").html('idle: '+cpu_now.idle+'%');
-	$j("#cpu_usage tr:nth-child(4) td:last").html('nice: '+cpu_now.nice+'%');
+	$j("#cpu_usage tr:nth-child(1) td:first").html('<#busy#>: '+cpu_now.busy+'%');
+	$j("#cpu_usage tr:nth-child(2) td:first").html('<#user#>: '+cpu_now.user+'%');
+	$j("#cpu_usage tr:nth-child(2) td:last").html('<#system#>: '+cpu_now.system+'%');
+	$j("#cpu_usage tr:nth-child(3) td:first").html('<#sirq#>: '+cpu_now.sirq+'%');
+	$j("#cpu_usage tr:nth-child(3) td:last").html('<#irq#>: '+cpu_now.irq+'%');
+	$j("#cpu_usage tr:nth-child(4) td:first").html('<#idle#>: '+cpu_now.idle+'%');
+	$j("#cpu_usage tr:nth-child(4) td:last").html('<#nice#>: '+cpu_now.nice+'%');
 
-	$j("#mem_usage tr:nth-child(1) td:first").html('total: '+bytesToSize(sysinfo.ram.total*1024, 2));
-	$j("#mem_usage tr:nth-child(2) td:first").html('free: '+bytesToSize(sysinfo.ram.free*1024, 2));
-	$j("#mem_usage tr:nth-child(2) td:last").html('used: '+bytesToSize(sysinfo.ram.used*1024, 2));
-	$j("#mem_usage tr:nth-child(3) td:first").html('cached: '+bytesToSize(sysinfo.ram.cached*1024, 2));
-	$j("#mem_usage tr:nth-child(3) td:last").html('buffers: '+bytesToSize(sysinfo.ram.buffers*1024, 2));
-	$j("#mem_usage tr:nth-child(4) td:first").html('swap: '+bytesToSize(sysinfo.swap.total*1024, 2));
-	$j("#mem_usage tr:nth-child(4) td:last").html('swap used: '+bytesToSize(sysinfo.swap.used*1024, 2));
+	$j("#mem_usage tr:nth-child(1) td:first").html('<#total#>: '+bytesToSize(sysinfo.ram.total*1024, 2));
+	$j("#mem_usage tr:nth-child(2) td:first").html('<#free#>: '+bytesToSize(sysinfo.ram.free*1024, 2));
+	$j("#mem_usage tr:nth-child(2) td:last").html('<#used#>: '+bytesToSize(sysinfo.ram.used*1024, 2));
+	$j("#mem_usage tr:nth-child(3) td:first").html('<#cached#>: '+bytesToSize(sysinfo.ram.cached*1024, 2));
+	$j("#mem_usage tr:nth-child(3) td:last").html('<#buffers#>: '+bytesToSize(sysinfo.ram.buffers*1024, 2));
+	$j("#mem_usage tr:nth-child(4) td:first").html('<#swap#>: '+bytesToSize(sysinfo.swap.total*1024, 2));
+	$j("#mem_usage tr:nth-child(4) td:last").html('<#swap used#>: '+bytesToSize(sysinfo.swap.used*1024, 2));
 
 	if(parseInt(sysinfo.wifi2.state) > 0)
 		$j('#wifi2_b').addClass('btn-info');
@@ -304,7 +304,7 @@ function show_banner(L3){
 	bc += '<table class="table table-condensed" width="100%" style="margin-bottom: 0px;">\n';
 	bc += '  <tr>\n';
 	bc += '    <td width="43%" style="text-align:left; border: 0 none;"></td>\n';
-	bc += '    <td style="border: 0 none; text-align:right;"><a class="label" href="javascript:void(0)" onclick="hide_adv_info();">hide</a></td>\n';
+	bc += '    <td style="border: 0 none; text-align:right;"><a class="label" href="javascript:void(0)" onclick="hide_adv_info();"><#hide#></a></td>\n';
 	bc += '  </tr>\n';
 	bc += '  <tr>\n';
 	bc += '    <td style="height: 20px;"></td>\n';
@@ -325,7 +325,7 @@ function show_banner(L3){
 	bc += '<table class="table table-condensed" width="100%" style="margin-bottom: 0px;">\n';
 	bc += '  <tr>\n';
 	bc += '    <td width="43%" style="text-align:left; border: 0 none;"></td>\n';
-	bc += '    <td style="border: 0 none; text-align:right;"><a class="label" href="javascript:void(0)" onclick="hide_adv_info();">hide</a></td>\n';
+	bc += '    <td style="border: 0 none; text-align:right;"><a class="label" href="javascript:void(0)" onclick="hide_adv_info();"><#hide#></a></td>\n';
 	bc += '  </tr>\n';
 	bc += '  <tr>\n';
 	bc += '    <td style="height: 20px;"></td>\n';
@@ -421,7 +421,7 @@ if (found_app_aldriver()){
 	tabtitle[17] = new Array("", "<#menu5_36#>");
 }
 if (found_app_sqm()){
-	tabtitle[18] = new Array("", "QoSÈôêÈÄü");
+	tabtitle[18] = new Array("", "QoSœﬁÀŸ");
 }
 if (found_app_frp()){
 	tabtitle[19] = new Array("", "<#menu5_25#>");
@@ -530,7 +530,7 @@ if (found_app_aldriver()){
 } else menuL2_title.push("");
 
 if (found_app_sqm()){
-	menuL2_title.push("QoSÈôêÈÄü");
+	menuL2_title.push("QoSœﬁÀŸ");
 } else menuL2_title.push("");
 
 if (found_app_frp()){
@@ -741,7 +741,7 @@ function show_footer(){
 	footer_code = '<div align="center" class="bottom-image"></div>\n';
 	footer_code +='<div align="center" class="copyright"><#footer_copyright_desc#></div>\n';
 	footer_code +='<div align="center">\n';
-	footer_code +='  <span>Highcharts by Torstein H√∏nsi & <a href="http://www.highcharts.com">Highsoft</a></span></br>\n';
+	footer_code +='  <span>Highcharts by Torstein Honsi & <a href="http://www.highcharts.com">Highsoft</a></span></br>\n';
 	footer_code +='  <span>Big icons designed by <a href="http://www.freepik.com">Freepik</a></br></span>\n';
 	footer_code +='  <span>Non-Commercial Use Only</span></br>\n';
 	footer_code +='</div>\n';
