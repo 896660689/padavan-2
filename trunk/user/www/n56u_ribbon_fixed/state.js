@@ -421,7 +421,7 @@ if (found_app_aldriver()){
 	tabtitle[17] = new Array("", "<#menu5_36#>");
 }
 if (found_app_sqm()){
-	tabtitle[18] = new Array("", "QoSÏŞËÙ");
+	tabtitle[18] = new Array("", "QoSé™é€Ÿ");
 }
 if (found_app_frp()){
 	tabtitle[19] = new Array("", "<#menu5_25#>");
@@ -530,7 +530,7 @@ if (found_app_aldriver()){
 } else menuL2_title.push("");
 
 if (found_app_sqm()){
-	menuL2_title.push("QoSÏŞËÙ");
+	menuL2_title.push("QoSÃÃÃ‹Ã™");
 } else menuL2_title.push("");
 
 if (found_app_frp()){
