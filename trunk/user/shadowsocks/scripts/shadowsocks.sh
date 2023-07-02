@@ -51,7 +51,7 @@ find_bin() {
 		if [ -f "/usr/bin/$1" ]; then
 			ret="/usr/bin/$1"
 		else
-			bin=$(echo -e "v2ray\nxray" | grep -v $1)
+			bin=$(echo -e "v2ray\xray" | grep -v $1)
 			ret="/usr/bin/$bin"
 		fi
 		;;
