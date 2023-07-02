@@ -919,6 +919,7 @@ menu5_2_5=Ethernet Switch
 menu5_2_6=MAC_Wakeup
 menu5_3_1=Internet Connection
 menu5_3_2=QoS
+menu5_38=QoS Speed limit
 menu5_3_3=IPv6 Protocol
 menu5_3_4=Port Forwarding
 menu5_3_5=DMZ
