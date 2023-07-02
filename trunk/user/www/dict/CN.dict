@@ -955,6 +955,7 @@ menu5_2_5=以太网交换机
 menu5_2_6=网络唤醒
 menu5_3_1=外网设置
 menu5_3_2=带宽管理 (QoS)
+menu5_38=QoS 限速
 menu5_3_3=IPv6 设置
 menu5_3_4=端口转发 (UPnP)
 menu5_3_5=隔离区 (DMZ)
