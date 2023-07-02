@@ -530,7 +530,7 @@ if (found_app_aldriver()){
 } else menuL2_title.push("");
 
 if (found_app_sqm()){
-	menuL2_title.push("#menu5_38#");
+	menuL2_title.push("<#menu5_38#>");
 } else menuL2_title.push("");
 
 if (found_app_frp()){
