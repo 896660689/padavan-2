@@ -190,12 +190,12 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_key_type", "0" } ,		/* WEP key format (HEX/ASCII)*/
 	{ "wl_mrate", "2" },			/* Mcast Rate */
 	{ "wl_crypto", "aes" },			/* WPA data encryption */
-	{ "wl_wpa_psk", DEF_WLAN_5G_PSK },			/* WPA pre-shared key */
+	{ "wl_wpa_psk", DEF_WLAN_5G_PSK },	/* WPA pre-shared key */
 	{ "wl_wpa_gtk_rekey", "3600" },		/* GTK rotation interval */
-	{ "wl_radius_ipaddr", ""},		/* RADIUS server IP address */
+	{ "wl_radius_ipaddr", ""},			/* RADIUS server IP address */
 	{ "wl_radius_port", "1812" },		/* RADIUS server UDP port */
-	{ "wl_radius_key", "" },		/* RADIUS shared secret */
-	{ "wl_radio_x", "0" },			/* Enable (1) or disable (0) radio */
+	{ "wl_radius_key", "" },			/* RADIUS shared secret */
+	{ "wl_radio_x", "1" },				/* Enable (1) or disable (0) radio */
 	{ "wl_IgmpSnEnable", "1" },
 	{ "wl_TxPower", "90" },
 	{ "wl_TxBurst", "1" },
@@ -561,44 +561,46 @@ struct nvram_pair router_defaults[] = {
 
 #if defined(APP_SHADOWSOCKS)
 	/* shadowsocks */
-	{ "ss_type", "0" },
-	{ "global_server", "nil" },
-	{ "backup_server", "nil" },
-	{ "udp_relay_server", "nil" },
+	{ "ss_enable", "0" },
+	{ "global_server", "nil" }, 	//nil 停用
+	{ "udp_relay_server", "nil" }, 	//nil 停用 same 与主服务相同
 	{ "ss_threads", "0" },
-	{ "ss_run_mode", "gfw" },
-	{ "pdnsd_enable", "0" },
+	{ "ss_run_mode", "gfw" }, 	 	//gfw router all oversea
 	{ "s_dports", "0" },
-	{ "ssp_local_port", "1080" },
+	{ "lan_con", "0" },
+	{ "pdnsd_enable", "0" },
+	{ "ss_chdns", "0" },
 	{ "china_dns", "223.5.5.5#53" },
 	{ "tunnel_forward", "8.8.8.8#53" },
-	{ "ssp_dns_ip", "2" },
-	{ "socks5_enable", "0" },
-	{ "socks5_wenable", "0" },
-	{ "socks5_port", "1088" },
-	{ "socks5_aenable", "0" },
-	{ "socks5_s_username", "" },
-	{ "socks5_s_password", "" },
-	{ "ss_turn", "0" },
 	{ "ss_cgroups", "0" },
 	{ "ss_cgoups_cpu_s", "512" },
 	{ "ss_cgoups_mem_s", "20M" },
-	{ "ss_watchcat", "1" },
+	{ "ss_watchcat", "0" },
+	{ "ss_turn", "0" },
 	{ "ss_turn_s", "600" },
 	{ "ss_turn_ss", "5" },
-	{ "lan_con", "0" },
+	{ "socks5_enable", "nil" }, 	//nil 停用 same 与主服务相同
+	{ "socks5_port", "1088" },
+	{ "ss_adblock", "0" },
+	{ "ss_adblock_url", "https://anti-ad.net/anti-ad-for-dnsmasq.conf"},
+	{ "ss_update_chnroute", "1" },
 	{ "ss_chnroute_url", "https://ispip.clang.cn/all_cn.txt"},
-	{ "ss_adblock_url", "https://gitee.com/privacy-protection-tools/anti-ad/raw/master/anti-ad-for-dnsmasq.conf"},
+	{ "ss_update_gfwlist", "1" },
+	{ "ss_gfwlist_url", "https://cdn.jsdelivr.net/gh/YW5vbnltb3Vz/domain-list-community@release/gfwlist.txt"},
+	{ "ss_type", "0" },
+	{ "backup_server", "nil" },
+	{ "ssp_local_port", "1080" },
+	{ "ssp_dns_ip", "2" },
+	{ "socks5_s_username", "" },
+	{ "socks5_s_password", "" },
 	{ "ss_schedule_enable", "0" },
 	{ "ss_schedule", "00000000000" },
 
-	{ "ss_enable", "0" },
 	{ "ss_mode", "1" },
 	{ "ss_server", "127.0.0.1" },
 	{ "ss_server_port", "8989" },
 	{ "ss_key", "Secret" },
 	{ "ss_method", "rc4-md5" },
-	{ "ss_chdns", "0" },
 	{ "ss_own", "1" },
 	{ "ss_local_port", "1080" },
 	{ "ss_mtu", "1492" },
@@ -615,8 +617,6 @@ struct nvram_pair router_defaults[] = {
 	{ "ss-tunnel_remote", "8.8.4.4:53" },
 	{ "ss-tunnel_mtu", "1492" },
 	
-	{ "ss_update_chnroute", "0" },
-	{ "ss_update_gfwlist", "0" },
 	{ "ssp_staticnum_x", "0" },
 	
 	{ "v2_type_tcp", "none" },
@@ -1017,11 +1017,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ether_uport", "0" },		/* WAN port in AP mode is static upstream by default */
 	{ "ether_m2u", "2" },
 	{ "ether_green", "1" },
-#if defined(USE_RTL8367)
 	{ "ether_jumbo", "1" },
-#else
-	{ "ether_jumbo", "0" },
-#endif
 #if (BOARD_NUM_ETH_LEDS > 1)
 	{ "ether_led0", "3" },
 #else
