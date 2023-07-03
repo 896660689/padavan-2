@@ -71,28 +71,28 @@
 			$j("#btn_aping_link").click(function () {
 				aping_dlink();
 			});
-			$j("#s5_aut").change(function() { 
+			$j("#s5_aut").change(function() {
 			if($j("#s5_aut").is(':checked')){
 			document.getElementById('s5_aut').value=1;
 			}else{
 			document.getElementById('s5_aut').value=0;
 			}
-			}); 
-			$j("#v2_tls").change(function() { 
+			});
+			$j("#v2_tls").change(function() {
 			if(document.getElementById('v2_tls').value != '0'){
 			showhide_div('row_tj_tls_host', 1);
-			}else{			
+			}else{
 			showhide_div('row_tj_tls_host', 0);
 			}
 			});
-			$j("#v2_mux").change(function() { 
+			$j("#v2_mux").change(function() {
 			if($j("#v2_mux").is(':checked')){
 			document.getElementById('v2_mux').value=1;
 			}else{
 			document.getElementById('v2_mux').value=0;
 			}
 			});
-			$j("#ssp_insecure").change(function() { 
+			$j("#ssp_insecure").change(function() {
 			if($j("#ssp_insecure").is(':checked')){
 			document.getElementById('ssp_insecure').value=1;
 			}else{
@@ -107,9 +107,9 @@ document.getElementById('btn_ctime').value='正在运行脚本:0s';
 document.getElementById('btn_ctime').style.display="inline";
 		c=setInterval(function(){
 		t=t+1
-        //document.getElementById("ctime").value=t + "秒";
+		//document.getElementById("ctime").value=t + "秒";
 		document.getElementById('btn_ctime').value='正在运行脚本:' + t +"s";
-    },1000);
+	},1000);
 }
 function dtime() {
 clearInterval(c);
@@ -320,7 +320,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 		}
 		function switch_dns() {
 			var b = document.form.pdnsd_enable.value;
-			if (b == "0" || b == "1") { 
+			if (b == "0" || b == "1") {
 				showhide_div('row_china_dns', 1);
 				showhide_div('row_tunnel_forward', 1);
 				showhide_div('row_ssp_dns_ip', 0);
@@ -509,7 +509,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 						var optionObj = JSON.parse(db_ss[key]); // 字符串转为对象
 						//if(optionObj.ping != "failed"){   //过滤ping不通的节点
 						var text = '[ ' + (optionObj.type ? optionObj.type : "类型获取失败") + ' ] ' + (optionObj.alias ? optionObj.alias : "名字获取失败"); // 判断下怕获取失败 ，括号是运算的问题
-						// 添加 
+						// 添加
 						nodeList.options.add(new Option(text, key.replace(keyStr, ''))); // 通过 replacce把不要的字符去掉
 						unodeList.options.add(new Option(text, key.replace(keyStr, ''))); // 通过 replacce把不要的字符去掉
 						s5nodeList.options.add(new Option(text, key.replace(keyStr, ''))); // 通过 replacce把不要的字符去掉
@@ -1066,7 +1066,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 				}
 				if (param != undefined) {
 				document.getElementById('ssp_name').value = decodeURI(param);
-				}				
+				}
 				s.innerHTML = "<font color='green'>导入Shadowsocks配置信息成功</font>";
 				}
 			 else {
@@ -1154,7 +1154,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 					else {
 						document.getElementById('v2_http_path').value = '/';
 					}
-				} 
+				}
 				if (ssm.net == "ws") {
 					document.getElementById('v2_ws_host').value = ssm.host;
 					document.getElementById('v2_ws_path').value = ssm.path;
@@ -1236,21 +1236,21 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 				if (queryParam.security == "xtls") {
 					document.getElementById('v2_tls').value = '2';
 					if (queryParam.flow != undefined) {
-					    if(queryParam.flow == 'xtls-rprx-direct'){
-					    	document.getElementById('v2_flow').value = '1';
-					    }
-					    else if(queryParam.flow == 'xtls-rprx-splice'){
-					    	document.getElementById('v2_flow').value = '2';
-					    }
-					    else
-					    {
-					    	document.getElementById('v2_flow').value = '0';
-					    }
-					    
+						if(queryParam.flow == 'xtls-rprx-direct'){
+							document.getElementById('v2_flow').value = '1';
+						}
+						else if(queryParam.flow == 'xtls-rprx-splice'){
+							document.getElementById('v2_flow').value = '2';
+						}
+						else
+						{
+							document.getElementById('v2_flow').value = '0';
+						}
+
 					}
 					else
 					{
-					    document.getElementById('v2_flow').value = '1';
+						document.getElementById('v2_flow').value = '1';
 					}
 					//document.getElementById('v2_tls').checked = true;
 					document.getElementById('ssp_insecure').value = 0;
