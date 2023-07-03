@@ -140,7 +140,7 @@ gen_config_file() {
 			lua /etc_ro/ss/genxrayconfig.lua $1 tcp 1080 >$xray_json_file
 			sed -i 's/\\//g' $xray_json_file
 		fi
-		;;	
+		;;
 	esac
 }
 
@@ -153,9 +153,9 @@ get_arg_out() {
 }
 
 start_rules() {
-    log "正在添加防火墙规则..."
+	log "正在添加防火墙规则..."
 	lua /etc_ro/ss/getconfig.lua $GLOBAL_SERVER > /tmp/server.txt
-	server=`cat /tmp/server.txt` 
+	server=`cat /tmp/server.txt`
 	cat /etc/storage/ss_ip.sh | grep -v '^!' | grep -v "^$" >$wan_fw_ips
 	cat /etc/storage/ss_wan_ip.sh | grep -v '^!' | grep -v "^$" >$wan_bp_ips
 	#resolve name
@@ -179,7 +179,7 @@ start_rules() {
 	if [ "$UDP_RELAY_SERVER" != "nil" ]; then
 		ARG_UDP="-U"
 		lua /etc_ro/ss/getconfig.lua $UDP_RELAY_SERVER > /tmp/userver.txt
-	    udp_server=`cat /tmp/userver.txt` 
+		udp_server=`cat /tmp/userver.txt`
 		udp_local_port="1080"
 	fi
 	if [ -n "$lan_ac_ips" ]; then
@@ -271,7 +271,7 @@ start_redir_tcp() {
 	xray)
 		run_bin $bin -config $xray_json_file
 		log "已运行 $($bin -version | head -1)"
-		;;	
+		;;
 	socks5)
 		for i in $(seq 1 $threads); do
 			run_bin lua /etc_ro/ss/gensocks.lua $GLOBAL_SERVER 1080
@@ -304,7 +304,7 @@ start_redir_udp() {
 		xray)
 			gen_config_file $UDP_RELAY_SERVER 1
 			run_bin $bin -config /tmp/xray-ssr-reudp.json
-			;;	
+			;;
 		trojan)
 			gen_config_file $UDP_RELAY_SERVER 1
 			$bin --config /tmp/trojan-ssr-reudp.json >/dev/null 2>&1 &
@@ -320,7 +320,7 @@ start_redir_udp() {
 
 stop_dns_proxy() {
 	pgrep dns2tcp | args kill
-	pgrep dnsproxy | args kill	
+	pgrep dnsproxy | args kill
 }
 
 start_dns_proxy() {
@@ -329,7 +329,7 @@ start_dns_proxy() {
 	dnsstr="$(nvram get tunnel_forward)"
 	dnsserver=$(echo "$dnsstr" | awk -F '#' '{print $1}')
 	if [ $pdnsd_enable = 1 ]; then
-	    log "启动 dns2tcp：5353 端口..."
+		log "启动 dns2tcp：5353 端口..."
 		# 将dnsserver (上游国外DNS: 比如 8.8.8.8) 放入ipset:gfwlist，强制走SS_SPEC_WAN_FW代理
 		ipset add gfwlist $dnsserver 2>/dev/null
 		dns2tcp -L"127.0.0.1#5353" -R"$dnsserver" >/dev/null 2>&1 &
@@ -344,7 +344,6 @@ start_dns_proxy() {
 }
 
 start_dns() {
-	
 	echo "create china hash:net family inet hashsize 1024 maxelem 65536" >/tmp/china.ipset
 	awk '!/^$/&&!/^#/{printf("add china %s'" "'\n",$0)}' /etc/storage/chinadns/chnroute.txt >>/tmp/china.ipset
 	ipset -! flush china
@@ -362,7 +361,7 @@ start_dns() {
 			  log "启动chinadns分流，全部域名走DNS代理...本次不使用本地cdn域名文件$local_chnlist_file, 下次你自已可以创建它，文件中每行表示一个域名（不用要子域名）"
 			  chinadns-ng -b 0.0.0.0 -l 65353 -c $(nvram get china_dns) -t 127.0.0.1#5353 -4 china >/dev/null 2>&1 &
 			fi
-			# adding upstream chinadns-ng 
+			# adding upstream chinadns-ng
 			sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
 			sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
 			cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
@@ -385,7 +384,7 @@ EOF
 	router)
 
 		ipset add gfwlist $dnsserver 2>/dev/null
-		# 不论chinadns-ng打开与否，都重启dns_proxy 
+		# 不论chinadns-ng打开与否，都重启dns_proxy
 		# 原因是针对gfwlist ipset有一个专有的dnsmasq配置表（由ss-rule创建放在/tmp/dnsmasq.dom/gfwlist_list.conf)
 		# 需要查询上游dns_proxy在本地5353端口
 		stop_dns_proxy
@@ -434,7 +433,7 @@ start_AD() {
 	  		if [ ! -n "$check" ] ; then
 				cp /tmp/adnew.conf /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
 	  		else
-			    cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
+				cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
 			fi
 		fi
 	fi
@@ -528,7 +527,7 @@ EOF
 }
 
 # ========== 启动 SS ==========
-ssp_start() { 
+ssp_start() {
 	ss_enable=`nvram get ss_enable`
 	if rules; then
 		cgroups_init
@@ -620,7 +619,7 @@ kill_process() {
 		killall trojan >/dev/null 2>&1
 		kill -9 "$trojandir" >/dev/null 2>&1
 	fi
-	
+
 	ipt2socks_process=$(pidof ipt2socks)
 	if [ -n "$ipt2socks_process" ]; then
 		log "关闭 ipt2socks 进程..."
@@ -662,7 +661,7 @@ kill_process() {
 		killall dnsproxy >/dev/null 2>&1
 		kill -9 "$dnsproxy_process" >/dev/null 2>&1
 	fi
-	
+
 	microsocks_process=$(pidof microsocks)
 	if [ -n "$microsocks_process" ]; then
 		log "关闭 socks5 服务端进程..."
@@ -746,5 +745,4 @@ reserver)
 	#exit 0
 	;;
 esac
-
 
