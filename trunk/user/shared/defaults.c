@@ -635,7 +635,7 @@ struct nvram_pair router_defaults[] = {
 	{ "v2_tls", "0" },
 	{ "v2_mux", "0" },
 	
-	/*SS 订阅*/
+	/*SS 璁㈤槄*/
 	{ "ss_list", "0" },
 	{ "d_server", "" },
 	{ "d_port", "" },
@@ -659,7 +659,7 @@ struct nvram_pair router_defaults[] = {
 	{ "d_keyword_n", "" },
 	{ "d_keyword_y", "" },
 	{ "d_update_link", "" },
-	{ "ss_keyword", "过期时间/剩余流量" },
+	{ "ss_keyword", "杩囨湡鏃堕棿/鍓╀綑娴侀噺", "" },
 #endif
 	
 	/*Adbyby PlUS+*/
@@ -780,7 +780,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ddnsto_id", "" },
 
 #if defined(APP_ALDRIVER)
-	/*阿里云盘*/
+	/*闃块噷浜戠洏*/
 	{ "aliyundrive_enable", "0" },
 	{ "ald_refresh_token", "" },
 	{ "ald_auth_user", "" },
