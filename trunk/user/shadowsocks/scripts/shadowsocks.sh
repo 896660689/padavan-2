@@ -496,6 +496,10 @@ ssp_close() {
 	kill -9 $(ps | grep ssr-switch | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill -9 $(ps | grep ssr-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill_process
+	if [ -n "$(pidof pdnsd)" ] ; then
+		killall pdnsd >/dev/null 2>&1
+		kill -9 "$(pidof pdnsd)" >/dev/null 2>&1
+	fi
 	cgroups_cleanup
 	sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
 	sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
@@ -505,6 +509,7 @@ ssp_close() {
 	if [ -f "/etc/storage/dnsmasq-ss.d" ]; then
 		rm -f /etc/storage/dnsmasq-ss.d
 	fi
+ 	[ -f /var/run/pdnsd.pid ] && rm -f /var/run/pdnsd.pid && sleep 1
 	clear_iptable
 	log "重启 DNSmasq 进程..."
 	/sbin/restart_dhcpd
