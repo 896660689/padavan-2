@@ -63,7 +63,7 @@ find_bin() {
 
 run_bin() {
 	(if [ "$(nvram get ss_cgroups)" = "1" ]; then
-	 	echo 0 > /sys/fs/cgroup/cpu/$NAME/tasks
+	 	echo 0 > /sys/fs/cgroup/cpu/$NAME/tasks \
 	 	echo 0 > /sys/fs/cgroup/memory/$NAME/tasks
 	 fi
 	 "$@" > /dev/null 2>&1
@@ -109,7 +109,6 @@ gen_config_file() {
 		sed -i 's/\\//g' $config_file
 		;;
 	trojan)
-		v2ray_enable=1
 		if [ "$2" = "0" ]; then
 			lua /etc_ro/ss/gentrojanconfig.lua $1 nat 1080 >$trojan_json_file
 			sed -i 's/\\//g' $trojan_json_file
@@ -129,7 +128,7 @@ gen_config_file() {
 		fi
 		;;
 	xray)
-		v2ray_enable=1
+		xray_enable=1
 		if [ "$2" = "1" ]; then
 			lua /etc_ro/ss/genxrayconfig.lua $1 udp 1080 >/tmp/v2-ssr-reudp.json
 			sed -i 's/\\//g' /tmp/v2-ssr-reudp.json
@@ -449,9 +448,9 @@ start_watchcat() {
 }
 
 auto_update() {
-	sed -i '/update_chnroute/d' /etc/storage/cron/crontabs/$http_username
-	sed -i '/update_gfwlist/d' /etc/storage/cron/crontabs/$http_username
-	sed -i '/ss-watchcat/d' /etc/storage/cron/crontabs/$http_username
+	sed -i '/update_chnroute/d' /etc/storage/cron/crontabs/$http_username > /dev/null 2>&1
+	sed -i '/update_gfwlist/d' /etc/storage/cron/crontabs/$http_username > /dev/null 2>&1
+	sed -i '/ss-watchcat/d' /etc/storage/cron/crontabs/$http_username > /dev/null 2>&1
 	if [ $(nvram get ss_update_chnroute) = "1" ]; then
 		cat >>/etc/storage/cron/crontabs/$http_username <<EOF
 0 7 * * * /usr/bin/update_chnroute.sh > /dev/null 2>&1
@@ -613,7 +612,7 @@ ressp() {
 	log "内网IP控制为: $lancons"
 }
 
-case $1 in
+case "$1" in
 start)
 	ssp_start
 	;;
