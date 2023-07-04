@@ -42,8 +42,7 @@
 			init_itoggle('ss_watchcat');
 			init_itoggle('ss_update_chnroute');
 			init_itoggle('ss_update_gfwlist');
-			init_itoggle('ss_turn');
-			init_itoggle('socks5_enable');
+			init_itoggle('socks5_aenable');
 			init_itoggle('ss_schedule_enable', change_on);
 			$j("#tab_ss_cfg, #tab_ss_add, #tab_ss_dlink, #tab_ss_ssl, #tab_ss_cli, #tab_ss_log, #tab_ss_help").click(
 				function () {
@@ -312,11 +311,16 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 		}
 		function switch_dns() {
 			var b = document.form.pdnsd_enable.value;
-			if (b == "0" || b == "1") {
+			if (b == "0") {
 				showhide_div('row_china_dns', 1);
 				showhide_div('row_tunnel_forward', 1);
 				showhide_div('row_ssp_dns_ip', 0);
 				showhide_div('row_ssp_dns_port', 0);
+			} else if (b == "1") {
+				showhide_div('row_china_dns', 0);
+				showhide_div('row_tunnel_forward', 0);
+				showhide_div('row_ssp_dns_ip', 1);
+				showhide_div('row_ssp_dns_port', 1);
 			} else if (b == "2") {
 				showhide_div('row_china_dns', 0);
 				showhide_div('row_tunnel_forward', 0);
@@ -1591,7 +1595,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 													</th>
 													</tr>
 													<tr>
-														<th width="50%"><#InetControl#></th>
+														<th><#InetControl#></th>
 														<td>
 															<input type="button" id="btn_reconnect" class="btn btn-info" value="<#Connect#>" onclick="submitInternet('Reconnect');">
 														</td>
@@ -1620,7 +1624,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														</td>
 													</tr>
 													<tr>
-														<th width="50%">游戏UDP中继服务器:</th>
+														<th>游戏UDP中继服务器:</th>
 														<td>
 															<select name="udp_relay_server" id="u_nodeList" style="width: 200px;" onchange="showsudlinkList()">
 																<option value="nil">停用</option>
@@ -1698,7 +1702,6 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														<th width="50%">国内DNS(仅chinadns-ng生效)</th>
 														<td>
 															<select name="china_dns" class="input" style="width: 200px;">
-																<option value="127.0.0.1#6053">SmartDNS 6053 (127.0.0.1)</option>
 																<option value="1.2.4.8#53">CNNIC DNS (1.2.4.8)</option>
 																<option value="223.5.5.5#53">Ali DNS (223.5.5.5)</option>
 																<option value="117.50.11.11#53">One DNS (117.50.11.11)</option>
@@ -1985,6 +1988,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															</td>
 														</tr>
 														<!--SSR参数结束-->
+														</tbody>
 														<tr id="row_s5_enable" style="display:none;">
 															<th>启用用户名/密码认证</th>
 															<td>
@@ -2207,9 +2211,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 																<input type="checkbox" name="v2_mux" id="v2_mux" >
 															</td>
 														</tr>
-														<!--
-														<tr>
-															<th width="50%">自动切换类型</th>
+														<!--<tr> <th>自动切换</th>
 <td>
 <div class="main_itoggle">
 <div id="switch_enable_x_0_on_of">
@@ -2281,36 +2283,15 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 																</div>
 															</div>
 															<div style="position: absolute; margin-left: -10000px;">
-																<input type="radio" value="1" name="ss_watchcat" id="ss_watchcat_1"<% nvram_match_x("", "ss_watchcat", "1", "checked"); %>><#checkbox_Yes#>
-																<input type="radio" value="0" name="ss_watchcat" id="ss_watchcat_0"<% nvram_match_x("", "ss_watchcat", "0", "checked"); %>><#checkbox_No#>
-															</div>
-														</td>
-													</tr>
-													<tr> <th>启用自动切换</th>
-<td>
-<div class="main_itoggle">
-<div id="ss_turn_on_of">
-<input type="checkbox" id="ss_turn_fake" <% nvram_match_x("", "ss_turn", "1", "value=1 checked"); %><% nvram_match_x("", "ss_turn", "0", "value=0"); %>>
+																<input type="radio" value="1" name="ss_watchcat"
+																	id="ss_watchcat_1"
+																	<% nvram_match_x("", "ss_watchcat", "1", "checked"); %>>
+																<#checkbox_Yes#>
+																	<input type="radio" value="0" name="ss_watchcat"
+																		id="ss_watchcat_0"
+																		<% nvram_match_x("", "ss_watchcat", "0", "checked"); %>>
+																	<#checkbox_No#>
 </div>
-</div>
-<div style="position: absolute; margin-left: -10000px;">
-<input type="radio" value="1" name="ss_turn" id="ss_turn_1" <% nvram_match_x("", "ss_turn", "1", "checked"); %>><#checkbox_Yes#>
-<input type="radio" value="0" name="ss_turn" id="ss_turn_0" <% nvram_match_x("", "ss_turn", "0", "checked"); %>><#checkbox_No#>
-</div>
-</td>
-</tr>
-													<tr>
-														<th width="50%">自动切换检查周期(秒)</th>
-														<td>
-															<input type="text" class="input" size="15" name="ss_turn_s" style="width: 200px" value="<% nvram_get_x("","ss_turn_s"); %>" />
-														</td>
-													</tr>
-													<tr>
-														<th width="50%">切换检查超时时间(秒)</th>
-														<td>
-															<input type="text" class="input" size="15" name="ss_turn_ss"
-																style="width: 200px"
-																value="<% nvram_get_x("", "ss_turn_ss"); %>">
 														</td>
 													</tr>
 													<!--
@@ -2361,7 +2342,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 													</tr>
 													<tr>
 														<th width="50%">
-															<#menu5_17_1#>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+															<#menu5_17_1#>&nbsp;&nbsp;&nbsp;&nbsp;<span
 																	class="label label-info"
 																	style="padding: 5px 5px 5px 5px;"
 																	id="chnroute_count"></span>
