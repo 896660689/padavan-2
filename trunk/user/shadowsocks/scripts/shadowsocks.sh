@@ -50,7 +50,7 @@ find_bin() {
 		if [ -f "/usr/bin/$1" ]; then
 			ret="/usr/bin/$1"
 		else
-			bin=$(echo -e "v2ray\xray" | grep -v $1)
+			bin=$(echo -e "v2ray\nxray" | grep -v $1)
 			ret="/usr/bin/$bin"
 		fi
 		;;
@@ -490,7 +490,7 @@ ssp_start() {
 ssp_close() {
 	rm -rf /tmp/cdn
 	/usr/bin/ss-rules -f
-	kill -9 $(ps | grep ss-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
+	kill -9 $(ps | grep ssr-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill_process
 	cgroups_cleanup
 	sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
@@ -630,5 +630,4 @@ reserver)
 	#exit 0
 	;;
 esac
-
 
