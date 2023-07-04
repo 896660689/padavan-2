@@ -104,7 +104,7 @@ do
 		then
 			log "pdnsd tunnel error.restart!"
 			kill -9 pdnsd
-			/usr/sbin/pdnsd -c /tmp/pdnsd.conf -d &
+			/usr/bin/pdnsd.sh
 		fi   
 	fi      
 	#chinadns-ng
@@ -141,3 +141,4 @@ EOF
 		fi   
 	fi
 done
+
