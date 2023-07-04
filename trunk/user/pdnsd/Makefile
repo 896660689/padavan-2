@@ -33,5 +33,5 @@ clean:
 
 romfs:
 	$(ROMFSINST) -p +x $(THISDIR)/$(SRC_NAME)/src/pdnsd /usr/bin/pdnsd
-
+	$(ROMFSINST) -p +x $(THISDIR)/ss-pdnsd.sh /usr/bin/pdnsd.sh
 
