@@ -16,10 +16,12 @@ CONFIG_FILE=/tmp/${NAME}.json
 CONFIG_UDP_FILE=/tmp/${NAME}_u.json
 CONFIG_SOCK5_FILE=/tmp/${NAME}_s.json
 v2_json_file="/tmp/v2-redir.json"
+xray_json_file="/tmp/xray-redir.json"
 trojan_json_file="/tmp/tj-redir.json"
 server_count=0
 redir_tcp=0
 v2ray_enable=0
+xray_enable=0
 redir_udp=0
 tunnel_enable=0
 local_enable=0
@@ -30,6 +32,7 @@ wan_fw_ips="/tmp/blackip.txt"
 lan_fp_ips="/tmp/lan_ip.txt"
 lan_gm_ips="/tmp/lan_gmip.txt"
 run_mode=`nvram get ss_run_mode`
+ss_turn=`nvram get ss_turn`
 lan_con=`nvram get lan_con`
 GLOBAL_SERVER=`nvram get global_server`
 socks=""
@@ -62,7 +65,7 @@ find_bin() {
 
 run_bin() {
 	(if [ "$(nvram get ss_cgroups)" = "1" ]; then
-	 	echo 0 > /sys/fs/cgroup/cpu/$NAME/tasks \
+	 	echo 0 > /sys/fs/cgroup/cpu/$NAME/tasks
 	 	echo 0 > /sys/fs/cgroup/memory/$NAME/tasks
 	 fi
 	 "$@" > /dev/null 2>&1
@@ -129,11 +132,11 @@ gen_config_file() {
 	xray)
 		xray_enable=1
 		if [ "$2" = "1" ]; then
-			lua /etc_ro/ss/genxrayconfig.lua $1 udp 1080 >/tmp/v2-ssr-reudp.json
-			sed -i 's/\\//g' /tmp/v2-ssr-reudp.json
+			lua /etc_ro/ss/genxrayconfig.lua $1 udp 1080 >/tmp/xray-ssr-reudp.json
+			sed -i 's/\\//g' /tmp/xray-ssr-reudp.json
 		else
-			lua /etc_ro/ss/genxrayconfig.lua $1 tcp 1080 >$v2_json_file
-			sed -i 's/\\//g' $v2_json_file
+			lua /etc_ro/ss/genxrayconfig.lua $1 tcp 1080 >$xray_json_file
+			sed -i 's/\\//g' $xray_json_file
 		fi
 		;;
 	esac
@@ -264,7 +267,7 @@ start_redir_tcp() {
 		log "已运行 $($bin -version | head -1)"
 		;;
 	xray)
-		run_bin $bin -config $v2_json_file
+		run_bin $bin -config $xray_json_file
 		log "已运行 $($bin -version | head -1)"
 		;;
 	socks5)
@@ -298,7 +301,7 @@ start_redir_udp() {
 			;;
 		xray)
 			gen_config_file $UDP_RELAY_SERVER 1
-			run_bin $bin -config /tmp/v2-ssr-reudp.json
+			run_bin $bin -config /tmp/xray-ssr-reudp.json
 			;;
 		trojan)
 			gen_config_file $UDP_RELAY_SERVER 1
@@ -367,9 +370,9 @@ start_AD() {
 		if [ -f "/tmp/adnew.conf" ]; then
 			check = `grep -wq "address=" /tmp/adnew.conf`
 	  		if [ ! -n "$check" ] ; then
-	    		cp /tmp/adnew.conf /tmp/dnsmasq.dom/ad.conf
+				cp /tmp/adnew.conf /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
 	  		else
-			    cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/ad.conf
+				cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
 			fi
 		fi
 	fi
@@ -402,9 +405,9 @@ start_local() {
 		log "Global_Socks5:$($bin -version | head -1) Started!"
 		;;
 	xray)
-		lua /etc_ro/ss/genxrayconfig.lua $local_server tcp 0 $s5_port >/tmp/v2-ssr-local.json
-		sed -i 's/\\//g' /tmp/v2-ssr-local.json
-		run_bin $bin -config /tmp/v2-ssr-local.json
+		lua /etc_ro/ss/genxrayconfig.lua $local_server tcp 0 $s5_port >/tmp/xray-ssr-local.json
+		sed -i 's/\\//g' /tmp/xray-ssr-local.json
+		run_bin $bin -config /tmp/xray-ssr-local.json
 		log "Global_Socks5:$($bin -version | head -1) Started!"
 		;;
 	trojan)
@@ -438,18 +441,18 @@ rules() {
 
 start_watchcat() {
 	if [ $(nvram get ss_watchcat) = 1 ]; then
-		let total_count=server_count+redir_tcp+redir_udp+tunnel_enable+v2ray_enable+local_enable+pdnsd_enable_flag+chinadnsng_enable_flag
+		let total_count=server_count+redir_tcp+redir_udp+tunnel_enable+v2ray_enable+xray_enable+local_enable+pdnsd_enable_flag+chinadnsng_enable_flag
 		if [ $total_count -gt 0 ]; then
 			#param:server(count) redir_tcp(0:no,1:yes)  redir_udp tunnel kcp local gfw
-			/usr/bin/ss-monitor $server_count $redir_tcp $redir_udp $tunnel_enable $v2ray_enable $local_enable $pdnsd_enable_flag $chinadnsng_enable_flag >/dev/null 2>&1 &
+			/usr/bin/ssr-monitor $server_count $redir_tcp $redir_udp $tunnel_enable $v2ray_enable $xray_enable $local_enable $pdnsd_enable_flag $chinadnsng_enable_flag >/dev/null 2>&1 &
 		fi
 	fi
 }
 
 auto_update() {
-	sed -i '/update_chnroute/d' /etc/storage/cron/crontabs/$http_username > /dev/null 2>&1
-	sed -i '/update_gfwlist/d' /etc/storage/cron/crontabs/$http_username > /dev/null 2>&1
-	sed -i '/ss-watchcat/d' /etc/storage/cron/crontabs/$http_username > /dev/null 2>&1
+	sed -i '/update_chnroute/d' /etc/storage/cron/crontabs/$http_username
+	sed -i '/update_gfwlist/d' /etc/storage/cron/crontabs/$http_username
+	sed -i '/ss-watchcat/d' /etc/storage/cron/crontabs/$http_username
 	if [ $(nvram get ss_update_chnroute) = "1" ]; then
 		cat >>/etc/storage/cron/crontabs/$http_username <<EOF
 0 7 * * * /usr/bin/update_chnroute.sh > /dev/null 2>&1
@@ -490,6 +493,7 @@ ssp_start() {
 ssp_close() {
 	rm -rf /tmp/cdn
 	/usr/bin/ss-rules -f
+	kill -9 $(ps | grep ssr-switch | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill -9 $(ps | grep ssr-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill_process
 	cgroups_cleanup
@@ -519,11 +523,11 @@ clear_iptable() {
 }
 
 kill_process() {
-	v2ray_process=$(pidof v2ray || pidof xray)
-	if [ -n "$v2ray_process" ]; then
-		log "关闭 V2Ray 进程..."
+	xray_process=$(pidof v2ray || pidof xray)
+	if [ -n "$xray_process" ]; then
+		log "关闭 XRay 进程..."
 		killall v2ray xray >/dev/null 2>&1
-		kill -9 "$v2ray_process" >/dev/null 2>&1
+		kill -9 "$xray_process" >/dev/null 2>&1
 	fi
 	ssredir=$(pidof ss-redir)
 	if [ -n "$ssredir" ]; then
@@ -610,7 +614,7 @@ ressp() {
 	log "内网IP控制为: $lancons"
 }
 
-case "$1" in
+case $1 in
 start)
 	ssp_start
 	;;
@@ -630,4 +634,5 @@ reserver)
 	#exit 0
 	;;
 esac
+
 
