@@ -16,12 +16,10 @@ CONFIG_FILE=/tmp/${NAME}.json
 CONFIG_UDP_FILE=/tmp/${NAME}_u.json
 CONFIG_SOCK5_FILE=/tmp/${NAME}_s.json
 v2_json_file="/tmp/v2-redir.json"
-xray_json_file="/tmp/xray-redir.json"
 trojan_json_file="/tmp/tj-redir.json"
 server_count=0
 redir_tcp=0
 v2ray_enable=0
-xray_enable=0
 redir_udp=0
 tunnel_enable=0
 local_enable=0
@@ -111,6 +109,7 @@ gen_config_file() {
 		sed -i 's/\\//g' $config_file
 		;;
 	trojan)
+		v2ray_enable=1
 		if [ "$2" = "0" ]; then
 			lua /etc_ro/ss/gentrojanconfig.lua $1 nat 1080 >$trojan_json_file
 			sed -i 's/\\//g' $trojan_json_file
@@ -130,13 +129,13 @@ gen_config_file() {
 		fi
 		;;
 	xray)
-		xray_enable=1
+		v2ray_enable=1
 		if [ "$2" = "1" ]; then
-			lua /etc_ro/ss/genxrayconfig.lua $1 udp 1080 >/tmp/xray-ssr-reudp.json
-			sed -i 's/\\//g' /tmp/xray-ssr-reudp.json
+			lua /etc_ro/ss/genxrayconfig.lua $1 udp 1080 >/tmp/v2-ssr-reudp.json
+			sed -i 's/\\//g' /tmp/v2-ssr-reudp.json
 		else
-			lua /etc_ro/ss/genxrayconfig.lua $1 tcp 1080 >$xray_json_file
-			sed -i 's/\\//g' $xray_json_file
+			lua /etc_ro/ss/genxrayconfig.lua $1 tcp 1080 >$v2_json_file
+			sed -i 's/\\//g' $v2_json_file
 		fi
 		;;
 	esac
@@ -267,7 +266,7 @@ start_redir_tcp() {
 		log "已运行 $($bin -version | head -1)"
 		;;
 	xray)
-		run_bin $bin -config $xray_json_file
+		run_bin $bin -config $v2_json_file
 		log "已运行 $($bin -version | head -1)"
 		;;
 	socks5)
@@ -301,7 +300,7 @@ start_redir_udp() {
 			;;
 		xray)
 			gen_config_file $UDP_RELAY_SERVER 1
-			run_bin $bin -config /tmp/xray-ssr-reudp.json
+			run_bin $bin -config /tmp/v2-ssr-reudp.json
 			;;
 		trojan)
 			gen_config_file $UDP_RELAY_SERVER 1
@@ -370,9 +369,9 @@ start_AD() {
 		if [ -f "/tmp/adnew.conf" ]; then
 			check = `grep -wq "address=" /tmp/adnew.conf`
 	  		if [ ! -n "$check" ] ; then
-				cp /tmp/adnew.conf /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
+	    		cp /tmp/adnew.conf /tmp/dnsmasq.dom/ad.conf
 	  		else
-				cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
+			    cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/ad.conf
 			fi
 		fi
 	fi
@@ -405,9 +404,9 @@ start_local() {
 		log "Global_Socks5:$($bin -version | head -1) Started!"
 		;;
 	xray)
-		lua /etc_ro/ss/genxrayconfig.lua $local_server tcp 0 $s5_port >/tmp/xray-ssr-local.json
-		sed -i 's/\\//g' /tmp/xray-ssr-local.json
-		run_bin $bin -config /tmp/xray-ssr-local.json
+		lua /etc_ro/ss/genxrayconfig.lua $local_server tcp 0 $s5_port >/tmp/v2-ssr-local.json
+		sed -i 's/\\//g' /tmp/v2-ssr-local.json
+		run_bin $bin -config /tmp/v2-ssr-local.json
 		log "Global_Socks5:$($bin -version | head -1) Started!"
 		;;
 	trojan)
@@ -441,10 +440,10 @@ rules() {
 
 start_watchcat() {
 	if [ $(nvram get ss_watchcat) = 1 ]; then
-		let total_count=server_count+redir_tcp+redir_udp+tunnel_enable+v2ray_enable+xray_enable+local_enable+pdnsd_enable_flag+chinadnsng_enable_flag
+		let total_count=server_count+redir_tcp+redir_udp+tunnel_enable+v2ray_enable+local_enable+pdnsd_enable_flag+chinadnsng_enable_flag
 		if [ $total_count -gt 0 ]; then
 			#param:server(count) redir_tcp(0:no,1:yes)  redir_udp tunnel kcp local gfw
-			/usr/bin/ssr-monitor $server_count $redir_tcp $redir_udp $tunnel_enable $v2ray_enable $xray_enable $local_enable $pdnsd_enable_flag $chinadnsng_enable_flag >/dev/null 2>&1 &
+			/usr/bin/ssr-monitor $server_count $redir_tcp $redir_udp $tunnel_enable $v2ray_enable $local_enable $pdnsd_enable_flag $chinadnsng_enable_flag >/dev/null 2>&1 &
 		fi
 	fi
 }
@@ -523,11 +522,11 @@ clear_iptable() {
 }
 
 kill_process() {
-	xray_process=$(pidof v2ray || pidof xray)
-	if [ -n "$xray_process" ]; then
-		log "关闭 XRay 进程..."
+	v2ray_process=$(pidof v2ray || pidof xray)
+	if [ -n "$v2ray_process" ]; then
+		log "关闭 V2Ray 进程..."
 		killall v2ray xray >/dev/null 2>&1
-		kill -9 "$xray_process" >/dev/null 2>&1
+		kill -9 "$v2ray_process" >/dev/null 2>&1
 	fi
 	ssredir=$(pidof ss-redir)
 	if [ -n "$ssredir" ]; then
