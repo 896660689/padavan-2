@@ -170,7 +170,6 @@ endif
 dir_$(SAMBA_ENABLED)				+= samba36
 dir_$(SAMBA_ENABLED)				+= wsdd2
 dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)	+= chnroute
-dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)	+= pdnsd
 dir_$(CONFIG_FIRMWARE_INCLUDE_TTYD)		+= ttyd
 dir_$(CONFIG_FIRMWARE_INCLUDE_MSD_LITE)		+= msd_lite
 dir_$(FRP_ENABLE)				+= frp
@@ -178,6 +177,7 @@ dir_$(SOFTETHERVPN_ENABLE)			+= softethervpn
 dir_$(CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT)         += scutclient
 dir_$(CONFIG_FIRMWARE_INCLUDE_VLMCSD)			+= vlmcsd
 dir_$(CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER)		+= dns-forwarder
+dir_$(CONFIG_FIRMWARE_INCLUDE_PDNSD)	                += pdnsd
 dir_$(SHADOWSOCKS_ENABLE)				+= shadowsocks
 dir_$(CONFIG_FIRMWARE_INCLUDE_LRZSZ)			+= lrzsz
 dir_$(CONFIG_FIRMWARE_INCLUDE_GDUT_DRCOM)		+= gdut-drcom
