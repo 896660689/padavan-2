@@ -2437,7 +2437,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script8')"><span>不走SS代理的LAN
 																	IP:</span></a>
-															<div id="script8">
+															<div id="script8" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_lan_ip.sh"
@@ -2450,7 +2450,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script9')"><span>强制走SS代理的LAN
 																	IP:</span></a>
-															<div id="script9">
+															<div id="script9" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_lan_bip.sh"
@@ -2462,7 +2462,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														<td colspan="3">
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script13')"><span>游戏模式LAN IP（客户端UDP所有端口,TCP跟随主服务器端口模式,强制走绕过大陆模式）:</span></a>
-															<div id="script13">
+															<div id="script13" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_lan_gmip.sh"
@@ -2475,7 +2475,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script11')"><span>强制走SS代理的WAN
 																	IP:</span></a>
-															<div id="script11">
+															<div id="script11" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_ip.sh"
@@ -2488,7 +2488,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script12')"><span>不走SS代理的WAN
 																	IP:</span></a>
-															<div id="script12">
+															<div id="script12" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_wan_ip.sh"
@@ -2500,7 +2500,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														<td colspan="3">
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script10')"><span>强制走SS代理的域名:</span></a>
-															<div id="script10">
+															<div id="script10" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.ss_dom.sh"
@@ -2512,7 +2512,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 														<td colspan="3">
 															<i class="icon-hand-right"></i> <a
 																href="javascript:spoiler_toggle('script15')"><span>不走SS代理的域名:</span></a>
-															<div id="script15">
+															<div id="script15" style="display: none">
 																<textarea rows="8" wrap="off" spellcheck="false"
 																	maxlength="314571" class="span12"
 																	name="scripts.uss_dom.sh"
