@@ -1,4 +1,4 @@
-SRC_NAME = chinadns-ng
+SRC_NAME = chinadns-ng.master
 SRC_URL=https://github.com/zfl9/chinadns-ng/archive/master.zip
 
 THISDIR = $(shell pwd)
