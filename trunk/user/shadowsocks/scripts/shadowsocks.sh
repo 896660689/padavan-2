@@ -4,6 +4,8 @@
 # Copyright (C) 2017 yushi studio <ywb94@qq.com>
 # Copyright (C) 2018 lean <coolsnowwolf@gmail.com>
 # Copyright (C) 2019 chongshengB <bkye@vip.qq.com>
+# Copyright (C) 2022 TurBoTse <860018505@qq.com>
+# Copyright (C) 2023 simonchen
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -138,7 +140,7 @@ gen_config_file() {
 			lua /etc_ro/ss/genxrayconfig.lua $1 tcp 1080 >$xray_json_file
 			sed -i 's/\\//g' $xray_json_file
 		fi
-		;;
+		;;	
 	esac
 }
 
@@ -153,7 +155,7 @@ get_arg_out() {
 start_rules() {
     log "正在添加防火墙规则..."
 	lua /etc_ro/ss/getconfig.lua $GLOBAL_SERVER > /tmp/server.txt
-	server=`cat /tmp/server.txt`
+	server=`cat /tmp/server.txt` 
 	cat /etc/storage/ss_ip.sh | grep -v '^!' | grep -v "^$" >$wan_fw_ips
 	cat /etc/storage/ss_wan_ip.sh | grep -v '^!' | grep -v "^$" >$wan_bp_ips
 	#resolve name
@@ -177,7 +179,7 @@ start_rules() {
 	if [ "$UDP_RELAY_SERVER" != "nil" ]; then
 		ARG_UDP="-U"
 		lua /etc_ro/ss/getconfig.lua $UDP_RELAY_SERVER > /tmp/userver.txt
-	    udp_server=`cat /tmp/userver.txt`
+	    udp_server=`cat /tmp/userver.txt` 
 		udp_local_port="1080"
 	fi
 	if [ -n "$lan_ac_ips" ]; then
@@ -243,7 +245,7 @@ start_redir_tcp() {
 	else
 		threads=$(nvram get ss_threads)
 	fi
-	log "启动 $stype 主服务器..."
+	log "正在启动 $stype 服务器..."
 	case "$stype" in
 	ss | ssr)
 		last_config_file=$CONFIG_FILE
@@ -253,7 +255,7 @@ start_redir_tcp() {
 			usleep 500000
 		done
 		redir_tcp=1
-		log "Shadowsocks/ShadowsocksR $threads 线程启动成功!"
+		log "Shadowsocks/ShadowsocksR $threads 线程启动成功..."
 		;;
 	trojan)
 		for i in $(seq 1 $threads); do
@@ -269,13 +271,13 @@ start_redir_tcp() {
 	xray)
 		run_bin $bin -config $xray_json_file
 		log "已运行 $($bin -version | head -1)"
-		;;
+		;;	
 	socks5)
 		for i in $(seq 1 $threads); do
 			run_bin lua /etc_ro/ss/gensocks.lua $GLOBAL_SERVER 1080
 			usleep 500000
 		done
-	    ;;
+		;;
 	esac
 	return 0
 }
@@ -284,7 +286,7 @@ start_redir_udp() {
 	if [ "$UDP_RELAY_SERVER" != "nil" ]; then
 		redir_udp=1
 		utype=$(nvram get ud_type)
-		log "启动 $utype 游戏 UDP 中继服务器"
+		log "正在启动 $utype 游戏 UDP 中继服务器..."
 		local bin=$(find_bin $utype)
 		[ ! -f "$bin" ] && log "UDP TPROXY Relay:Can't find $bin program, can't start!" && return 1
 		case "$utype" in
@@ -302,7 +304,7 @@ start_redir_udp() {
 		xray)
 			gen_config_file $UDP_RELAY_SERVER 1
 			run_bin $bin -config /tmp/xray-ssr-reudp.json
-			;;
+			;;	
 		trojan)
 			gen_config_file $UDP_RELAY_SERVER 1
 			$bin --config /tmp/trojan-ssr-reudp.json >/dev/null 2>&1 &
@@ -310,37 +312,96 @@ start_redir_udp() {
 			;;
 		socks5)
 			echo "1"
-		    ;;
+			;;
 		esac
 	fi
 	return 0
 }
 
+stop_dns_proxy() {
+	pgrep dns2tcp | args kill
+	pgrep dnsproxy | args kill	
+}
+
+start_dns_proxy() {
+	pdnsd_enable=$(nvram get pdnsd_enable) # 0: dnsproxy , 1: dns2tcp
+	pdnsd_enable_flag=$pdnsd_enable
+	dnsstr="$(nvram get tunnel_forward)"
+	dnsserver=$(echo "$dnsstr" | awk -F '#' '{print $1}')
+	if [ $pdnsd_enable = 1 ]; then
+	    log "启动 dns2tcp：5353 端口..."
+		# 将dnsserver (上游国外DNS: 比如 8.8.8.8) 放入ipset:gfwlist，强制走SS_SPEC_WAN_FW代理
+		ipset add gfwlist $dnsserver 2>/dev/null
+		dns2tcp -L"127.0.0.1#5353" -R"$dnsserver" >/dev/null 2>&1 &
+	elif [ $pdnsd_enable = 0 ]; then
+		log "启动 dnsproxy：5353 端口..."
+		# 将dnsserver (上游国外DNS: 比如 8.8.8.8) 放入ipset:gfwlist，强制走SS_SPEC_WAN_FW代理
+		ipset add gfwlist $dnsserver 2>/dev/null
+		dnsproxy -d -p 5353 -R $dnsserver >/dev/null 2>&1 &
+	else
+		log "DNS解析方式不支持该选项: $pdnsd_enable , 建议选择dnsproxy"
+	fi
+}
+
 start_dns() {
+	
 	echo "create china hash:net family inet hashsize 1024 maxelem 65536" >/tmp/china.ipset
 	awk '!/^$/&&!/^#/{printf("add china %s'" "'\n",$0)}' /etc/storage/chinadns/chnroute.txt >>/tmp/china.ipset
 	ipset -! flush china
 	ipset -! restore </tmp/china.ipset 2>/dev/null
 	rm -f /tmp/china.ipset
+	start_chinadns() {
+		ss_chdns=$(nvram get ss_chdns)
+		if [ $ss_chdns = 1 ]; then
+			chinadnsng_enable_flag=1
+			local_chnlist_file='/etc/storage/chinadns/chnlist_mini.txt'
+			if [ -f "$local_chnlist_file" ]; then
+			  log "启动chinadns分流，仅国外域名走DNS代理..."
+			  chinadns-ng -b 0.0.0.0 -l 65353 -c $(nvram get china_dns) -t 127.0.0.1#5353 -4 china -M -m $local_chnlist_file >/dev/null 2>&1 &
+			else
+			  log "启动chinadns分流，全部域名走DNS代理...本次不使用本地cdn域名文件$local_chnlist_file, 下次你自已可以创建它，文件中每行表示一个域名（不用要子域名）"
+			  chinadns-ng -b 0.0.0.0 -l 65353 -c $(nvram get china_dns) -t 127.0.0.1#5353 -4 china >/dev/null 2>&1 &
+			fi
+			# adding upstream chinadns-ng 
+			sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
+			sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
+			cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
+no-resolv
+server=127.0.0.1#65353
+EOF
+		fi
+		# dnsmasq optimization
+		sed -i '/min-cache-ttl/d' /etc/storage/dnsmasq/dnsmasq.conf
+		sed -i '/dns-forward-max/d' /etc/storage/dnsmasq/dnsmasq.conf
+		cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
+min-cache-ttl=1800
+dns-forward-max=1000
+EOF
+		# restart dnsmasq
+		killall dnsmasq
+		/user/sbin/dnsmasq >/dev/null 2>&1 &
+	}
 	case "$run_mode" in
 	router)
-		dnsstr="$(nvram get tunnel_forward)"
-		dnsserver=$(echo "$dnsstr" | awk -F '#' '{print $1}')
-		#dnsport=$(echo "$dnsstr" | awk -F '#' '{print $2}')
-		log "启动 dns2tcp：5353 端口..."
-		dns2tcp -L"127.0.0.1#5353" -R"$dnsstr" >/dev/null 2>&1 &
-		pdnsd_enable_flag=0
-		log "开始处理 gfwlist..."
+
+		ipset add gfwlist $dnsserver 2>/dev/null
+		# 不论chinadns-ng打开与否，都重启dns_proxy 
+		# 原因是针对gfwlist ipset有一个专有的dnsmasq配置表（由ss-rule创建放在/tmp/dnsmasq.dom/gfwlist_list.conf)
+		# 需要查询上游dns_proxy在本地5353端口
+		stop_dns_proxy
+		start_dns_proxy
+		start_chinadns
 	;;
 	gfw)
 		dnsstr="$(nvram get tunnel_forward)"
 		dnsserver=$(echo "$dnsstr" | awk -F '#' '{print $1}')
 		#dnsport=$(echo "$dnsstr" | awk -F '#' '{print $2}')
 		ipset add gfwlist $dnsserver 2>/dev/null
-		log "启动 dns2tcp：5353 端口..."
-		dns2tcp -L"127.0.0.1#5353" -R"$dnsstr" >/dev/null 2>&1 &
-		pdnsd_enable_flag=0
-		log "开始处理 gfwlist..."
+
+		stop_dns_proxy
+		start_dns_proxy
+		start_chinadns
+		log "开始处理 GFWList..."
 		;;
 	oversea)
 		ipset add gfwlist $dnsserver 2>/dev/null
@@ -356,8 +417,9 @@ EOF
 		ipset add ss_spec_wan_ac $dnsserver 2>/dev/null
 	;;
 	esac
-	log "重启 DNSmasq 进程..."
+	log "正在重启 DNSmasq 进程..."
 	/sbin/restart_dhcpd
+	log "DNSmasq 进程已重启..."
 }
 
 start_AD() {
@@ -372,7 +434,7 @@ start_AD() {
 	  		if [ ! -n "$check" ] ; then
 				cp /tmp/adnew.conf /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
 	  		else
-				cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
+			    cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
 			fi
 		fi
 	fi
@@ -466,8 +528,8 @@ EOF
 }
 
 # ========== 启动 SS ==========
-ssp_start() {
-    ss_enable=`nvram get ss_enable`
+ssp_start() { 
+	ss_enable=`nvram get ss_enable`
 	if rules; then
 		cgroups_init
 		if start_redir_tcp; then
@@ -481,12 +543,12 @@ ssp_start() {
 	auto_update
 	ENABLE_SERVER=$(nvram get global_server)
 	[ "$ENABLE_SERVER" = "nil" ] && return 1
-	log "启动成功。"
-	log "内网IP控制为: $lancons"
+	log "已启动科学上网..."
+	log "内网控制为: $lancons"
 	nvram set check_mode=0
-    if [ "$pppoemwan" = 0 ]; then
-        /usr/bin/detect.sh
-    fi
+	if [ "$pppoemwan" = 0 ]; then
+		/usr/bin/detect.sh
+	fi
 }
 
 # ========== 关闭 SS ==========
@@ -496,10 +558,6 @@ ssp_close() {
 	kill -9 $(ps | grep ssr-switch | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill -9 $(ps | grep ssr-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill_process
-	if [ -n "$(pidof pdnsd)" ] ; then
-		killall pdnsd >/dev/null 2>&1
-		kill -9 "$(pidof pdnsd)" >/dev/null 2>&1
-	fi
 	cgroups_cleanup
 	sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
 	sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
@@ -509,13 +567,13 @@ ssp_close() {
 	if [ -f "/etc/storage/dnsmasq-ss.d" ]; then
 		rm -f /etc/storage/dnsmasq-ss.d
 	fi
- 	[ -f /var/run/pdnsd.pid ] && rm -f /var/run/pdnsd.pid && sleep 1
 	clear_iptable
-	log "重启 DNSmasq 进程..."
+	log "正在重启 DNSmasq 进程..."
 	/sbin/restart_dhcpd
+	log "DNSmasq 进程已重启..."
 	if [ "$pppoemwan" = 0 ]; then
-        /usr/bin/detect.sh
-    fi
+		/usr/bin/detect.sh
+	fi
 }
 
 
@@ -534,6 +592,7 @@ kill_process() {
 		killall v2ray xray >/dev/null 2>&1
 		kill -9 "$xray_process" >/dev/null 2>&1
 	fi
+
 	ssredir=$(pidof ss-redir)
 	if [ -n "$ssredir" ]; then
 		log "关闭 ss-redir 进程..."
@@ -561,7 +620,7 @@ kill_process() {
 		killall trojan >/dev/null 2>&1
 		kill -9 "$trojandir" >/dev/null 2>&1
 	fi
-
+	
 	ipt2socks_process=$(pidof ipt2socks)
 	if [ -n "$ipt2socks_process" ]; then
 		log "关闭 ipt2socks 进程..."
@@ -597,6 +656,13 @@ kill_process() {
 		kill -9 "$dns2tcp_process" >/dev/null 2>&1
 	fi
 
+	dnsproxy_process=$(pidof dnsproxy)
+	if [ -n "$dnsproxy_process" ]; then
+		log "关闭 dnsproxy 进程..."
+		killall dnsproxy >/dev/null 2>&1
+		kill -9 "$dnsproxy_process" >/dev/null 2>&1
+	fi
+	
 	microsocks_process=$(pidof microsocks)
 	if [ -n "$microsocks_process" ]; then
 		log "关闭 socks5 服务端进程..."
@@ -615,8 +681,8 @@ ressp() {
 	start_watchcat
 	auto_update
 	ENABLE_SERVER=$(nvram get global_server)
-	log "备用服务器启动成功"
-	log "内网IP控制为: $lancons"
+	log "备用服务器启动成功..."
+	log "内网控制为: $lancons"
 }
 
 case $1 in
@@ -624,7 +690,9 @@ start)
 	ssp_start
 	;;
 stop)
+	killall -q -9 ssr-switch
 	ssp_close
+	dns2tcp_process=$(pidof dns2tcp)
 	;;
 restart)
 	ssp_close
