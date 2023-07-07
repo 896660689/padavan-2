@@ -1549,7 +1549,7 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 										<div>
 											<ul class="nav nav-tabs" style="margin-bottom: 10px;">
 												<li class="active">
-													<a id="tab_ss_cfg" href="#cfg" >客户端</a>
+													<a id="tab_ss_cfg" href="#cfg">客户端</a>
 												</li>
 												<li>
 													<a id="tab_ss_add" href="#add">节点管理</a>
