@@ -100,15 +100,15 @@ do
 	#dns2tcp
 	if [ $pdnsd_process = 0 ] ;then
 		icount=`ps -w | grep dnsproxy | grep -v grep | wc -l`
-		if [ $icount = 0 ]  #如果进程挂掉就重启它
+		if [ $icount = 0 ]
 		then
 			log "启动 dnsproxy：5353 端口..."
 			killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
 			dnsproxy -d -p 5353 -R -R"$(nvram get tunnel_forward)" >/dev/null 2>&1 &
 		fi
-	elif [ $pdnsd_process = 1 ]; then
+	elif [ $pdnsd_process = 1 ] ;then
 		icount=`ps -w | grep dns2tcp | grep -v grep | wc -l`
-		if [ $icount = 0 ]  #如果进程挂掉就重启它
+		if [ $icount = 0 ]
 		then
 			log "启动 dns2tcp：5353 端口..."
 			killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
@@ -120,7 +120,7 @@ do
 	#chinadns-ng
 	if [ $chinadnsng_process -gt 0 ] ;then
 		icount=`ps -w | grep chinadns-ng | grep -v grep | wc -l`
-		if [ $icount -lt $chinadnsng_process ]  #如果进程挂掉就重启它
+		if [ $icount -lt $chinadnsng_process ] #如果进程挂掉就重启它
 		then
 			log "chinadns-ng tunnel error.restart!"
 			killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
