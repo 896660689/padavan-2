@@ -36,7 +36,7 @@ clean:
 
 romfs:
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS),y)
-	chmod -R a+x ./chinadns/*
+	chmod a+x ./chinadns/*
 	$(ROMFSINST) $(THISDIR)/chinadns.tar.gz /etc_ro/chinadns.tar.gz
 endif
 	$(ROMFSINST) -p +x $(THISDIR)/$(SRC_NAME)/chinadns-ng /usr/bin/chinadns-ng
