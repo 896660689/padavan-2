@@ -20,6 +20,8 @@ CONFIG_SOCK5_FILE=/tmp/${NAME}_s.json
 v2_json_file="/tmp/v2-redir.json"
 xray_json_file="/tmp/xray-redir.json"
 trojan_json_file="/tmp/tj-redir.json"
+STORAGE="/etc/storage"
+CDN_HOME="$STORAGE/chinadns"
 server_count=0
 redir_tcp=0
 v2ray_enable=0
@@ -353,6 +355,7 @@ start_dns() {
 	start_chinadns() {
 		ss_chdns=$(nvram get ss_chdns)
 		if [ $ss_chdns = 1 ]; then
+  			func_cdn_file
 			chinadnsng_enable_flag=1
 			local_chnlist_file='/etc/storage/chinadns/chnlist_mini.txt'
 			if [ -f "$local_chnlist_file" ]; then
@@ -369,6 +372,8 @@ start_dns() {
 no-resolv
 server=127.0.0.1#65353
 EOF
+		else
+  			[ -d "$CDN_HOME" ] && rm -rf $CDN_HOME
 		fi
 		# dnsmasq optimization
 		sed -i '/min-cache-ttl/d' /etc/storage/dnsmasq/dnsmasq.conf
@@ -422,6 +427,13 @@ EOF
 	log "正在重启 DNSmasq 进程..."
 	/sbin/restart_dhcpd
 	log "DNSmasq 进程已重启..."
+}
+
+func_cdn_file() {
+    [ ! -f "$cdn_folder" ] && sleep 2
+    if [ ! -d "$CDN_HOME" ] ; then
+        tar zxf "$csn_folder" -C "$STORAGE" &
+    fi
 }
 
 # ========== 启动 Socks5 代理 ==========
@@ -535,7 +547,7 @@ ssp_start() {
 
 # ========== 关闭 SS ==========
 ssp_close() {
-	rm -rf /tmp/cdn
+	[ -d "$CDN_HOME" ] && rm -rf $CDN_HOME
 	/usr/bin/ss-rules -f
 	kill -9 $(ps | grep ssr-switch | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill -9 $(ps | grep ssr-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
