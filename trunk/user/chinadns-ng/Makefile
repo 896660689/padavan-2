@@ -28,4 +28,3 @@ clean:
 
 romfs:
 	$(ROMFSINST) -p +x $(THISDIR)/$(SRC_NAME)/chinadns-ng /usr/bin/chinadns-ng
-	$(ROMFSINST) $(THISDIR)/chinadns.tar.gz /etc_ro/chinadns.tar.gz
