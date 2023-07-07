@@ -321,7 +321,9 @@ start_redir_udp() {
 }
 
 stop_dns_proxy() {
-	killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
+	kill -9 dnsproxy &>/dev/null
+	kill -9 dns2tcp &>/dev/null
+	kill -9 chinadns-ng &>/dev/null
 }
 
 start_dns_proxy() {
@@ -355,7 +357,7 @@ start_dns() {
 	start_chinadns() {
 		ss_chdns=$(nvram get ss_chdns)
 		if [ $ss_chdns = 1 ]; then
-  			func_cdn_file
+  			#func_cdn_file
 			chinadnsng_enable_flag=1
 			local_chnlist_file='/etc/storage/chinadns/chnlist_mini.txt'
 			if [ -f "$local_chnlist_file" ]; then
@@ -551,8 +553,8 @@ ssp_close() {
 	/usr/bin/ss-rules -f
 	kill -9 $(ps | grep ssr-switch | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill -9 $(ps | grep ssr-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
- 	killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
-	kill_process
+ 	stop_dns_proxy
+ 	kill_process
 	cgroups_cleanup
 	sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
 	sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
