@@ -119,12 +119,13 @@ do
 	fi
 	#chinadns-ng
 	if [ $chinadnsng_process -gt 0 ] ;then
+		cdn_file='/etc/storage/chinadns/chnlist_mini.txt'
 		icount=`ps -w | grep chinadns-ng | grep -v grep | wc -l`
 		if [ $icount -lt $chinadnsng_process ] #如果进程挂掉就重启它
 		then
 			log "chinadns-ng tunnel error.restart!"
 			killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
-			chinadns-ng -b 0.0.0.0 -l 65353 -c $(nvram get china_dns) -t 127.0.0.1#5353 -4 china -M -m /tmp/cdn.txt >/dev/null 2>&1 &
+			chinadns-ng -b 0.0.0.0 -l 65353 -c $(nvram get china_dns) -t 127.0.0.1#5353 -4 china -M -m "$cdn_file" >/dev/null 2>&1 &
 			sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
 			sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
 			cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
