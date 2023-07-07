@@ -319,9 +319,7 @@ start_redir_udp() {
 }
 
 stop_dns_proxy() {
-	killall -q -9 dns2tcp
-	killall -q -9 dnsproxy
-	killall -q -9 chinadns-ng
+	killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
 }
 
 start_dns_proxy() {
@@ -426,25 +424,6 @@ EOF
 	log "DNSmasq 进程已重启..."
 }
 
-start_AD() {
-	mkdir -p /tmp/dnsmasq.dom
-	curl -s -o /tmp/adnew.conf --connect-timeout 10 --retry 3 $(nvram get ss_adblock_url)
-	if [ ! -f "/tmp/adnew.conf" ]; then
-		log "广告过滤功能未开启或者过滤地址失效，网络异常等 ！！！"
-	else
-		log "去广告文件下载成功广告过滤功能已启用..."
-		if [ -f "/tmp/adnew.conf" ]; then
-			check = `grep -wq "address=" /tmp/adnew.conf`
-	  		if [ ! -n "$check" ] ; then
-				cp /tmp/adnew.conf /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
-	  		else
-			    cat /tmp/adnew.conf | grep ^\|\|[^\*]*\^$ | sed -e 's:||:address\=\/:' -e 's:\^:/0\.0\.0\.0:' > /tmp/dnsmasq.dom/anti-ad-for-dnsmasq.conf
-			fi
-		fi
-	fi
-	rm -f /tmp/adnew.conf
-}
-
 # ========== 启动 Socks5 代理 ==========
 start_local() {
 	local s5_port=$(nvram get socks5_port)
@@ -538,7 +517,6 @@ ssp_start() {
 		cgroups_init
 		if start_redir_tcp; then
 			start_redir_udp
-			#start_AD
 			start_dns
 		fi
 	fi
@@ -561,6 +539,7 @@ ssp_close() {
 	/usr/bin/ss-rules -f
 	kill -9 $(ps | grep ssr-switch | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill -9 $(ps | grep ssr-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
+ 	killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
 	kill_process
 	cgroups_cleanup
 	sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
