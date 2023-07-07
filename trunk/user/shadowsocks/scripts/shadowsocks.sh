@@ -319,8 +319,9 @@ start_redir_udp() {
 }
 
 stop_dns_proxy() {
-	pgrep dns2tcp | args kill
-	pgrep dnsproxy | args kill	
+	killall -q -9 dns2tcp
+	killall -q -9 dnsproxy
+	killall -q -9 chinadns-ng
 }
 
 start_dns_proxy() {
