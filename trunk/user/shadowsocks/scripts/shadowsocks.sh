@@ -328,28 +328,29 @@ start_dns_proxy() {
 	pdnsd_enable_flag=$pdnsd_enable
 	dnsstr="$(nvram get tunnel_forward)"
 	dnsserver=$(echo "$dnsstr" | awk -F '#' '{print $1}')
-	if [ $pdnsd_enable = 1 ]; then
-	    log "启动 dns2tcp：5353 端口..."
-		# 将dnsserver (上游国外DNS: 比如 8.8.8.8) 放入ipset:gfwlist，强制走SS_SPEC_WAN_FW代理
-		ipset add gfwlist $dnsserver 2>/dev/null
-		dns2tcp -L"127.0.0.1#5353" -R"$dnsserver" >/dev/null 2>&1 &
-	elif [ $pdnsd_enable = 0 ]; then
+	if [ $pdnsd_enable = 0 ]; then
 		log "启动 dnsproxy：5353 端口..."
 		# 将dnsserver (上游国外DNS: 比如 8.8.8.8) 放入ipset:gfwlist，强制走SS_SPEC_WAN_FW代理
 		ipset add gfwlist $dnsserver 2>/dev/null
 		dnsproxy -d -p 5353 -R $dnsserver >/dev/null 2>&1 &
-	else
+	    elif [ $pdnsd_enable = 1 ]; then
+		log "启动 dns2tcp：5353 端口..."
+		# 将dnsserver (上游国外DNS: 比如 8.8.8.8) 放入ipset:gfwlist，强制走SS_SPEC_WAN_FW代理
+		ipset add gfwlist $dnsserver 2>/dev/null
+		dns2tcp -L"127.0.0.1#5353" -R"$dnsserver" >/dev/null 2>&1 &
+  else
 		log "DNS解析方式不支持该选项: $pdnsd_enable , 建议选择dnsproxy"
 	fi
 }
 
 start_dns() {
-	
+
 	echo "create china hash:net family inet hashsize 1024 maxelem 65536" >/tmp/china.ipset
 	awk '!/^$/&&!/^#/{printf("add china %s'" "'\n",$0)}' /etc/storage/chinadns/chnroute.txt >>/tmp/china.ipset
 	ipset -! flush china
 	ipset -! restore </tmp/china.ipset 2>/dev/null
 	rm -f /tmp/china.ipset
+ 
 	start_chinadns() {
 		ss_chdns=$(nvram get ss_chdns)
 		if [ $ss_chdns = 1 ]; then
@@ -381,6 +382,7 @@ EOF
 		killall dnsmasq
 		/user/sbin/dnsmasq >/dev/null 2>&1 &
 	}
+ 
 	case "$run_mode" in
 	router)
 
@@ -417,6 +419,7 @@ EOF
 		ipset add ss_spec_wan_ac $dnsserver 2>/dev/null
 	;;
 	esac
+ 
 	log "正在重启 DNSmasq 进程..."
 	/sbin/restart_dhcpd
 	log "DNSmasq 进程已重启..."
