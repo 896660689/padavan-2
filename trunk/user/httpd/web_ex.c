@@ -2215,7 +2215,7 @@ static int rules_count_hook(int eid, webs_t wp, int argc, char **argv)
 	websWrite(wp, "function chnroute_count() { return '%s';}\n", count);
 #if defined(APP_SHADOWSOCKS)
 	memset(count, 0, sizeof(count));
-	fstream = popen("cat /etc/storage/gfwlist/gfwlist_listnew.conf |wc -l","r");
+	fstream = popen("cat /etc/storage/gfwlist/gfwlist_list.conf |wc -l","r");
 	if(fstream) {
 		fgets(count, sizeof(count), fstream);
 		pclose(fstream);
@@ -2273,6 +2273,12 @@ static int dns2tcp_status_hook(int eid, webs_t wp, int argc, char **argv)
 {
 	int dns2tcp_status_code = pids("dns2tcp");
 	websWrite(wp, "function dns2tcp_status() { return %d;}\n", dns2tcp_status_code);
+	return 0;
+}
+static int dnsproxy_status_hook(int eid, webs_t wp, int argc, char **argv)
+{
+	int dnsproxy_status_code = pids("dnsproxy");
+	websWrite(wp, "function dnsproxy_status() { return %d;}\n", dnsproxy_status_code);
 	return 0;
 }
 #endif
