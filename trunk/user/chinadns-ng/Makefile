@@ -3,9 +3,7 @@ SRC_URL=https://github.com/zfl9/chinadns-ng/archive/master.zip
 
 THISDIR = $(shell pwd)
 
-CDN_HOME=chinadns
-
-all: chinadns_dl download_test extract_test
+all: download_test extract_test
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)/build
 
 download_test:
@@ -18,12 +16,6 @@ extract_test:
 		unzip $(SRC_NAME).zip; \
 	fi )
 
-chinadns_dl:
-ifeq ($(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS),y)
-	( if [ -d $(CDN_HOME) ]; then \
-		tar zcf chinadns.tar.gz $(CSN_HOME) ; \
-	fi )
-endif
 
 all: 
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
@@ -35,8 +27,5 @@ clean:
 	rm -f config_done
 
 romfs:
-ifeq ($(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS),y)
-	chmod a+x ./chinadns/*
-	$(ROMFSINST) $(THISDIR)/chinadns.tar.gz /etc_ro/chinadns.tar.gz
-endif
 	$(ROMFSINST) -p +x $(THISDIR)/$(SRC_NAME)/chinadns-ng /usr/bin/chinadns-ng
+	$(ROMFSINST) $(THISDIR)/chinadns.tar.gz /etc_ro/chinadns.tar.gz
