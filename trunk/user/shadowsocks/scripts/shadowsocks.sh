@@ -22,6 +22,7 @@ xray_json_file="/tmp/xray-redir.json"
 trojan_json_file="/tmp/tj-redir.json"
 STORAGE="/etc/storage"
 CDN_HOME="$STORAGE/chinadns"
+DnsMasq_conf="$STORAGE/dnsmasq/dnsmasq.conf"
 server_count=0
 redir_tcp=0
 v2ray_enable=0
@@ -367,19 +368,23 @@ start_dns() {
 			  chinadns-ng -b 0.0.0.0 -l 65353 -c $(nvram get china_dns) -t 127.0.0.1#5353 -4 china >/dev/null 2>&1 &
 			fi
 			# adding upstream chinadns-ng 
-			sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
-			sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
-			cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
+			sed -i '/no-resolv/d' $DnsMasq_conf
+			sed -i '/server=127.0.0.1/d' $DnsMasq_conf
+			cat >> $DnsMasq_conf << EOF
 no-resolv
 server=127.0.0.1#65353
 EOF
 		else
+  			sed -i '/no-resolv/d' $DnsMasq_conf
+			sed -i '/server=127.0.0.1/d' $DnsMasq_conf
+   			sed -i '/min-cache-ttl/d' $DnsMasq_conf
+			sed -i '/dns-forward-max/d' $DnsMasq_conf
   			[ -d "$CDN_HOME" ] && rm -rf $CDN_HOME
 		fi
 		# dnsmasq optimization
-		sed -i '/min-cache-ttl/d' /etc/storage/dnsmasq/dnsmasq.conf
-		sed -i '/dns-forward-max/d' /etc/storage/dnsmasq/dnsmasq.conf
-		cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
+		sed -i '/min-cache-ttl/d' $DnsMasq_conf
+		sed -i '/dns-forward-max/d' $DnsMasq_conf
+		cat >> $DnsMasq_conf << EOF
 min-cache-ttl=1800
 dns-forward-max=1000
 EOF
@@ -413,9 +418,9 @@ EOF
 	oversea)
 		ipset add gfwlist $dnsserver 2>/dev/null
 		mkdir -p /etc/storage/dnsmasq.oversea
-		sed -i '/dnsmasq-ss/d' /etc/storage/dnsmasq/dnsmasq.conf
-		sed -i '/dnsmasq.oversea/d' /etc/storage/dnsmasq/dnsmasq.conf
-		cat >>/etc/storage/dnsmasq/dnsmasq.conf <<EOF
+		sed -i '/dnsmasq-ss/d' $DnsMasq_conf
+		sed -i '/dnsmasq.oversea/d' $DnsMasq_conf
+		cat >>$DnsMasq_conf <<EOF
 conf-dir=/etc/storage/dnsmasq.oversea
 EOF
 ;;
@@ -554,11 +559,11 @@ ssp_close() {
  	stop_dns_proxy
  	kill_process
 	cgroups_cleanup
-	sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
-	sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
-	sed -i '/cdn/d' /etc/storage/dnsmasq/dnsmasq.conf
-	sed -i '/gfwlist/d' /etc/storage/dnsmasq/dnsmasq.conf
-	sed -i '/dnsmasq.oversea/d' /etc/storage/dnsmasq/dnsmasq.conf
+	sed -i '/no-resolv/d' $DnsMasq_conf
+	sed -i '/server=127.0.0.1/d' $DnsMasq_conf
+	sed -i '/cdn/d' $DnsMasq_conf
+	sed -i '/gfwlist/d' $DnsMasq_conf
+	sed -i '/dnsmasq.oversea/d' $DnsMasq_conf
 	if [ -f "/etc/storage/dnsmasq-ss.d" ]; then
 		rm -f /etc/storage/dnsmasq-ss.d
 	fi
@@ -701,5 +706,6 @@ reserver)
 	#exit 0
 	;;
 esac
+
 
 
