@@ -377,8 +377,6 @@ EOF
 		else
   			sed -i '/no-resolv/d' $DnsMasq_conf
 			sed -i '/server=127.0.0.1/d' $DnsMasq_conf
-   			sed -i '/min-cache-ttl/d' $DnsMasq_conf
-			sed -i '/dns-forward-max/d' $DnsMasq_conf
   			[ -d "$CDN_HOME" ] && rm -rf $CDN_HOME
 		fi
 		# dnsmasq optimization
@@ -390,7 +388,7 @@ dns-forward-max=1000
 EOF
 		# restart dnsmasq
 		killall dnsmasq
-		/user/sbin/dnsmasq >/dev/null 2>&1 &
+		/usr/sbin/dnsmasq >/dev/null 2>&1 &
 	}
  
 	case "$run_mode" in
@@ -561,6 +559,8 @@ ssp_close() {
 	cgroups_cleanup
 	sed -i '/no-resolv/d' $DnsMasq_conf
 	sed -i '/server=127.0.0.1/d' $DnsMasq_conf
+    	sed -i '/min-cache-ttl/d' $DnsMasq_conf
+	sed -i '/dns-forward-max/d' $DnsMasq_conf
 	sed -i '/cdn/d' $DnsMasq_conf
 	sed -i '/gfwlist/d' $DnsMasq_conf
 	sed -i '/dnsmasq.oversea/d' $DnsMasq_conf
