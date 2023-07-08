@@ -158,8 +158,8 @@ start_rules() {
     log "正在添加防火墙规则..."
 	lua /etc_ro/ss/getconfig.lua $GLOBAL_SERVER > /tmp/server.txt
 	server=`cat /tmp/server.txt`
-	cat /etc/storage/ss_ip.sh | grep -v '^!' | grep -v "^$" >$wan_fw_ips
-	cat /etc/storage/ss_wan_ip.sh | grep -v '^!' | grep -v "^$" >$wan_bp_ips
+	cat $STORAGE/ss_ip.sh | grep -v '^!' | grep -v "^$" >$wan_fw_ips
+	cat $STORAGE/ss_wan_ip.sh | grep -v '^!' | grep -v "^$" >$wan_bp_ips
 	#resolve name
 	if echo $server | grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$" >/dev/null; then
 		server=${server}
@@ -168,9 +168,9 @@ start_rules() {
 	else
 		server=$(resolveip -4 -t 3 $server | awk 'NR==1{print}')
 		if echo $server | grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$" >/dev/null; then
-			echo $server >/etc/storage/ssr_ip
+			echo $server >$STORAGE/ssr_ip
 		else
-			server=$(cat /etc/storage/ssr_ip)
+			server=$(cat $STORAGE/ssr_ip)
 		fi
 	fi
 	local_port="1080"
@@ -204,15 +204,15 @@ start_rules() {
 		rm -f $lan_fp_ips
 		lancon="all"
 		lancons="全部走代理..."
-		cat /etc/storage/ss_lan_ip.sh | grep -v '^!' | grep -v "^$" >$lan_fp_ips
+		cat $STORAGE/ss_lan_ip.sh | grep -v '^!' | grep -v "^$" >$lan_fp_ips
 	elif [ "$lan_con" = "1" ]; then
 		rm -f $lan_fp_ips
 		lancon="bip"
 		lancons="指定 IP 走代理: 请到规则管理页面添加需要走代理的 IP..."
-		cat /etc/storage/ss_lan_bip.sh | grep -v '^!' | grep -v "^$" >$lan_fp_ips
+		cat $STORAGE/ss_lan_bip.sh | grep -v '^!' | grep -v "^$" >$lan_fp_ips
 	fi
 	rm -f $lan_gm_ips
-	cat /etc/storage/ss_lan_gmip.sh | grep -v '^!' | grep -v "^$" >$lan_gm_ips
+	cat $STORAGE/ss_lan_gmip.sh | grep -v '^!' | grep -v "^$" >$lan_gm_ips
 	dports=$(nvram get s_dports)
 	if [ $dports = "0" ]; then
 		proxyport="--syn"
@@ -349,7 +349,7 @@ start_dns_proxy() {
 start_dns() {
 
 	echo "create china hash:net family inet hashsize 1024 maxelem 65536" >/tmp/china.ipset
-	awk '!/^$/&&!/^#/{printf("add china %s'" "'\n",$0)}' /etc/storage/chinadns/chnroute.txt >>/tmp/china.ipset
+	awk '!/^$/&&!/^#/{printf("add china %s'" "'\n",$0)}' $STORAGE/chinadns/chnroute.txt >>/tmp/china.ipset
 	ipset -! flush china
 	ipset -! restore </tmp/china.ipset 2>/dev/null
 	rm -f /tmp/china.ipset
@@ -359,7 +359,7 @@ start_dns() {
 		if [ $ss_chdns = 1 ]; then
   			#func_cdn_file
 			chinadnsng_enable_flag=1
-			local_chnlist_file='/etc/storage/chinadns/chnlist_mini.txt'
+			local_chnlist_file='$STORAGE/chinadns/chnlist.txt'
 			if [ -f "$local_chnlist_file" ]; then
 			  log "启动chinadns分流，仅国外域名走DNS代理..."
 			  chinadns-ng -b 0.0.0.0 -l 65353 -c $(nvram get china_dns) -t 127.0.0.1#5353 -4 china -M -m $local_chnlist_file >/dev/null 2>&1 &
@@ -377,8 +377,6 @@ EOF
 		else
   			sed -i '/no-resolv/d' $DnsMasq_conf
 			sed -i '/server=127.0.0.1/d' $DnsMasq_conf
-  			[ -d "$CDN_HOME" ] && rm -rf $CDN_HOME
-		fi
 		# dnsmasq optimization
 		sed -i '/min-cache-ttl/d' $DnsMasq_conf
 		sed -i '/dns-forward-max/d' $DnsMasq_conf
@@ -386,6 +384,7 @@ EOF
 min-cache-ttl=1800
 dns-forward-max=1000
 EOF
+		fi
 		# restart dnsmasq
 		killall dnsmasq
 		/usr/sbin/dnsmasq >/dev/null 2>&1 &
@@ -415,7 +414,7 @@ EOF
 		;;
 	oversea)
 		ipset add gfwlist $dnsserver 2>/dev/null
-		mkdir -p /etc/storage/dnsmasq.oversea
+		mkdir -p $STORAGE/dnsmasq.oversea
 		sed -i '/dnsmasq-ss/d' $DnsMasq_conf
 		sed -i '/dnsmasq.oversea/d' $DnsMasq_conf
 		cat >>$DnsMasq_conf <<EOF
@@ -435,7 +434,7 @@ EOF
 
 func_cdn_file() {
     [ ! -f "$cdn_folder" ] && sleep 2
-    if [ ! -d "$CDN_HOME" ] ; then
+    if [ ! -f "$CDN_HOME/chnlist.txt" ] ; then
         tar zxf "$csn_folder" -C "$STORAGE" &
     fi
 }
@@ -511,16 +510,15 @@ start_watchcat() {
 }
 
 auto_update() {
-	sed -i '/update_chnroute/d' /etc/storage/cron/crontabs/$http_username
-	sed -i '/update_gfwlist/d' /etc/storage/cron/crontabs/$http_username
-	sed -i '/ss-watchcat/d' /etc/storage/cron/crontabs/$http_username
+	sed -i '/update_chnroute/d' $STORAGE/cron/crontabs/$http_username
+	sed -i '/update_gfwlist/d' $STORAGE/cron/crontabs/$http_username
 	if [ $(nvram get ss_update_chnroute) = "1" ]; then
-		cat >>/etc/storage/cron/crontabs/$http_username <<EOF
+		cat >>$STORAGE/cron/crontabs/$http_username <<EOF
 0 7 * * * /usr/bin/update_chnroute.sh > /dev/null 2>&1
 EOF
 	fi
 	if [ $(nvram get ss_update_gfwlist) = "1" ]; then
-		cat >>/etc/storage/cron/crontabs/$http_username <<EOF
+		cat >>$STORAGE/cron/crontabs/$http_username <<EOF
 0 8 * * * /usr/bin/update_gfwlist.sh > /dev/null 2>&1
 EOF
 	fi
@@ -551,7 +549,7 @@ ssp_start() {
 
 # ========== 关闭 SS ==========
 ssp_close() {
-	[ -d "$CDN_HOME" ] && rm -rf $CDN_HOME
+	[ -f "$CDN_HOME/chnlist.txt" ] && rm -rf $CDN_HOME/chnlist.txt
 	/usr/bin/ss-rules -f
  	killall -q -9 ssr-monitor >/dev/null 2>&1
  	stop_dns_proxy
@@ -559,13 +557,13 @@ ssp_close() {
 	cgroups_cleanup
 	sed -i '/no-resolv/d' $DnsMasq_conf
 	sed -i '/server=127.0.0.1/d' $DnsMasq_conf
-    	sed -i '/min-cache-ttl/d' $DnsMasq_conf
+	sed -i '/min-cache-ttl/d' $DnsMasq_conf
 	sed -i '/dns-forward-max/d' $DnsMasq_conf
 	sed -i '/cdn/d' $DnsMasq_conf
 	sed -i '/gfwlist/d' $DnsMasq_conf
 	sed -i '/dnsmasq.oversea/d' $DnsMasq_conf
-	if [ -f "/etc/storage/dnsmasq-ss.d" ]; then
-		rm -f /etc/storage/dnsmasq-ss.d
+	if [ -f "$STORAGE/dnsmasq-ss.d" ]; then
+		rm -f $STORAGE/dnsmasq-ss.d
 	fi
 	clear_iptable
 	ipset destroy gfwlist >/dev/null 2>&1
@@ -576,7 +574,6 @@ ssp_close() {
 		/usr/bin/detect.sh
 	fi
 }
-
 
 clear_iptable() {
 	s5_port=$(nvram get socks5_port)
@@ -706,6 +703,4 @@ reserver)
 	#exit 0
 	;;
 esac
-
-
 
