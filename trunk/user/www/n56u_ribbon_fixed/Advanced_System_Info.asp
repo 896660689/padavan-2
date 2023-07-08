@@ -103,7 +103,7 @@ var cpu_chart = {
     },
     series: [{
         type: 'areaspline',
-        name: 'Busy',
+        name: '<#Busy#>',
         gapSize: 5,
         threshold: null,
         fillColor: {
@@ -118,19 +118,19 @@ var cpu_chart = {
         data: (prepare_array_chart)()
     },{
         type: 'spline',
-        name: 'User',
+        name: '<#User#>',
         gapSize: 5,
         threshold: null,
         data: (prepare_array_chart)()
     },{
         type: 'spline',
-        name: 'System',
+        name: '<#System#>',
         gapSize: 5,
         threshold: null,
         data: (prepare_array_chart)()
     },{
         type: 'spline',
-        name: 'Sirq',
+        name: '<#Sirq#>',
         gapSize: 5,
         threshold: null,
         data: (prepare_array_chart)()
@@ -205,17 +205,17 @@ var mem_chart = {
     },
     series: [{
         type: 'spline',
-        name: 'Used',
+        name: '<#Used#>',
         gapSize: 5,
         data: (prepare_array_chart)()
     },{
         type: 'spline',
-        name: 'Buffers',
+        name: '<#Buffers#>',
         gapSize: 5,
         data: (prepare_array_chart)()
     },{
         type: 'spline',
-        name: 'Cached',
+        name: '<#Cached#>',
         gapSize: 5,
         data: (prepare_array_chart)()
     }]
@@ -367,8 +367,8 @@ function getSystemJsonData(cpu,ram){
                                         <table style="width: 100%; margin-top: 6px; margin-bottom: 6px;">
                                             <tr>
                                                 <td width="100%" align="center" style="text-align: center">
-                                                    <div id="cpu_chart" style="width: 850px; padding-left: 5px;"></div>
-                                                    <div id="mem_chart" style="width: 850px; padding-left: 5px;"></div>
+                                                    <div id="cpu_chart" style="width: 670px; padding-left: 5px;"></div>
+                                                    <div id="mem_chart" style="width: 670px; padding-left: 5px;"></div>
                                                 </td>
                                             </tr>
                                         </table>
@@ -387,3 +387,4 @@ function getSystemJsonData(cpu,ram){
 </div>
 </body>
 </html>
+
