@@ -368,26 +368,27 @@ start_dns() {
 			  chinadns-ng -b 0.0.0.0 -l 65353 -c $(nvram get china_dns) -t 127.0.0.1#5353 -4 china >/dev/null 2>&1 &
 			fi
 			# adding upstream chinadns-ng 
-			sed -i '/no-resolv/d' $DnsMasq_conf
-			sed -i '/server=127.0.0.1/d' $DnsMasq_conf
-			cat >> $DnsMasq_conf << EOF
+			if grep -q "no-resolv" "$DnsMasq_conf"
+			then
+				log "ok dnsmasq"
+			else
+				cat >> $DnsMasq_conf << EOF
 no-resolv
 server=127.0.0.1#65353
 EOF
+			fi
 		else
-  			sed -i '/no-resolv/d' $DnsMasq_conf
-			sed -i '/server=127.0.0.1/d' $DnsMasq_conf
 		# dnsmasq optimization
-		sed -i '/min-cache-ttl/d' $DnsMasq_conf
-		sed -i '/dns-forward-max/d' $DnsMasq_conf
-		cat >> $DnsMasq_conf << EOF
+  		if grep -q "dns-forward-max" "$DnsMasq_conf"
+		then
+			log "ok dnsmasq"
+		else
+			cat >> $DnsMasq_conf << EOF
 min-cache-ttl=1800
 dns-forward-max=1000
 EOF
 		fi
-		# restart dnsmasq
-		killall dnsmasq
-		/usr/sbin/dnsmasq >/dev/null 2>&1 &
+		/sbin/restart_dhcpd
 	}
  
 	case "$run_mode" in
