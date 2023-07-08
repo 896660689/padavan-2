@@ -553,7 +553,8 @@ ssp_close() {
 	/usr/bin/ss-rules -f
 	kill -9 $(ps | grep ssr-switch | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	kill -9 $(ps | grep ssr-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
- 	stop_dns_proxy
+ 	killall -q -9 ssr-monitor >/dev/null 2>&1
+  stop_dns_proxy
  	kill_process
 	cgroups_cleanup
 	sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
@@ -687,9 +688,7 @@ start)
 	ssp_start
 	;;
 stop)
-	killall -q -9 ssr-switch
 	ssp_close
-	dns2tcp_process=$(pidof dns2tcp)
 	;;
 restart)
 	ssp_close
