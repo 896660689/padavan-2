@@ -29,14 +29,13 @@ xray_enable=0
 redir_udp=0
 tunnel_enable=0
 local_enable=0
-pdnsd_enable_flag=0
 chinadnsng_enable_flag=0
 wan_bp_ips="/tmp/whiteip.txt"
 wan_fw_ips="/tmp/blackip.txt"
 lan_fp_ips="/tmp/lan_ip.txt"
 lan_gm_ips="/tmp/lan_gmip.txt"
 run_mode=`nvram get ss_run_mode`
-ss_turn=`nvram get ss_turn`
+pdnsd_enable_flag=`nvram get pdnsd_enable`
 lan_con=`nvram get lan_con`
 GLOBAL_SERVER=`nvram get global_server`
 socks=""
@@ -398,8 +397,8 @@ EOF
 		# 需要查询上游dns_proxy在本地5353端口
 		stop_dns_proxy
 		start_dns_proxy
-		start_chinadns
-	;;
+  		start_chinadns
+		;;
 	gfw)
 		dnsstr="$(nvram get tunnel_forward)"
 		dnsserver=$(echo "$dnsstr" | awk -F '#' '{print $1}')
@@ -551,10 +550,8 @@ ssp_start() {
 ssp_close() {
 	[ -d "$CDN_HOME" ] && rm -rf $CDN_HOME
 	/usr/bin/ss-rules -f
-	kill -9 $(ps | grep ssr-switch | grep -v grep | awk '{print $1}') >/dev/null 2>&1
-	kill -9 $(ps | grep ssr-monitor | grep -v grep | awk '{print $1}') >/dev/null 2>&1
  	killall -q -9 ssr-monitor >/dev/null 2>&1
-  stop_dns_proxy
+ 	stop_dns_proxy
  	kill_process
 	cgroups_cleanup
 	sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
