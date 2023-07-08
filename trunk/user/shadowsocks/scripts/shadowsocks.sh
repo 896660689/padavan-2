@@ -141,7 +141,7 @@ gen_config_file() {
 			lua /etc_ro/ss/genxrayconfig.lua $1 tcp 1080 >$xray_json_file
 			sed -i 's/\\//g' $xray_json_file
 		fi
-		;;	
+		;;
 	esac
 }
 
@@ -156,7 +156,7 @@ get_arg_out() {
 start_rules() {
     log "正在添加防火墙规则..."
 	lua /etc_ro/ss/getconfig.lua $GLOBAL_SERVER > /tmp/server.txt
-	server=`cat /tmp/server.txt` 
+	server=`cat /tmp/server.txt`
 	cat /etc/storage/ss_ip.sh | grep -v '^!' | grep -v "^$" >$wan_fw_ips
 	cat /etc/storage/ss_wan_ip.sh | grep -v '^!' | grep -v "^$" >$wan_bp_ips
 	#resolve name
@@ -272,7 +272,7 @@ start_redir_tcp() {
 	xray)
 		run_bin $bin -config $xray_json_file
 		log "已运行 $($bin -version | head -1)"
-		;;	
+		;;
 	socks5)
 		for i in $(seq 1 $threads); do
 			run_bin lua /etc_ro/ss/gensocks.lua $GLOBAL_SERVER 1080
@@ -524,7 +524,7 @@ EOF
 }
 
 # ========== 启动 SS ==========
-ssp_start() { 
+ssp_start() {
 	ss_enable=`nvram get ss_enable`
 	if rules; then
 		cgroups_init
@@ -615,7 +615,7 @@ kill_process() {
 		killall trojan >/dev/null 2>&1
 		kill -9 "$trojandir" >/dev/null 2>&1
 	fi
-	
+
 	ipt2socks_process=$(pidof ipt2socks)
 	if [ -n "$ipt2socks_process" ]; then
 		log "关闭 ipt2socks 进程..."
