@@ -389,6 +389,7 @@ dns-forward-max=1000
 EOF
 		fi
 		/sbin/restart_dhcpd
+  	fi
 	}
  
 	case "$run_mode" in
