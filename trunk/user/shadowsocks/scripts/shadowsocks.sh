@@ -377,7 +377,7 @@ no-resolv
 server=127.0.0.1#65353
 EOF
 			fi
-		else
+		fi
 		# dnsmasq optimization
   		if grep -q "dns-forward-max" "$DnsMasq_conf"
 		then
@@ -389,7 +389,6 @@ dns-forward-max=1000
 EOF
 		fi
 		/sbin/restart_dhcpd
-  	fi
 	}
  
 	case "$run_mode" in
