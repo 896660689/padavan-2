@@ -161,7 +161,7 @@ EOF
 	else
 		if grep -q "no-resolv" "/etc/storage/dnsmasq/dnsmasq.conf"
 		then
-			sed -i '/min-cache-ttl/d; /dns-forward-max/d; /no-resolv/d; /127.0.0.1/d' "/etc/storage/dnsmasq/dnsmasq.conf" &
+			sed -i '/no-resolv/d; /127.0.0.1/d' "/etc/storage/dnsmasq/dnsmasq.conf" &
 			/sbin/restart_dhcpd
 		fi
 	fi
