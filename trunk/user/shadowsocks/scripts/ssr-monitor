@@ -17,6 +17,8 @@ pdnsd_process=$7
 chinadnsng_process=$8
 i=0
 sock5_port=$(nvram get socks5_proxy_port)
+pdnsd_process=$(nvram get pdnsd_enable) # 0: dnsproxy , 1: dns2tcp
+
 if echo $server|grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$">/dev/null; then         
 	server=${server}
 else
@@ -37,6 +39,12 @@ run_bin() {
 	 fi
 	 "$@" > /dev/null 2>&1
 	) &
+}
+
+stop_dns() {
+    kill -9 $(busybox ps -w | grep dnsproxy | grep -v grep | awk '{print $1}') >/dev/null 2>&1
+    kill -9 $(busybox ps -w | grep dns2tcp | grep -v grep | awk '{print $1}') >/dev/null 2>&1
+    kill -9 $(busybox ps -w | grep chinadns-ng | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 }
 
 while [ "1" = "1" ]  #死循环
@@ -103,16 +111,16 @@ do
 		if [ $icount = 0 ]
 		then
 			log "启动 dnsproxy：5353 端口..."
-			killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
+			stop_dns
 			dnsproxy -d -p 5353 -R -R"$(nvram get tunnel_forward)" >/dev/null 2>&1 &
 		fi
 	elif [ $pdnsd_process = 1 ] ;then
 		icount=`ps -w | grep dns2tcp | grep -v grep | wc -l`
 		if [ $icount = 0 ]
 		then
-			log "启动 dns2tcp：5353 端口..."
-			killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
-			dns2tcp -L"127.0.0.1#5353" -R"$(nvram get tunnel_forward)" >/dev/null 2>&1 &
+		        log "启动 dns2tcp：5353 端口..."
+		        stop_dns
+		        dns2tcp -L"127.0.0.1#5353" -R"$(nvram get tunnel_forward)" >/dev/null 2>&1 &
 		fi
 	else
 		log "DNS解析方式不支持该选项: $pdnsd_enable , 建议选择dnsproxy"
@@ -124,9 +132,8 @@ do
 		if [ $icount -lt $chinadnsng_process ] #如果进程挂掉就重启它
 		then
 			log "chinadns-ng tunnel error.restart!"
-			killall -q -9 dns2tcp && killall -q -9 dnsproxy && killall -q -9 chinadns-ng
-			[ $pdnsd_process = 1 ] && \
-			dns2tcp -L"127.0.0.1#5353" -R"$(nvram get tunnel_forward)" >/dev/null 2>&1 &
+			stop_dns
+			[ $pdnsd_process = 1 ] && dns2tcp -L"127.0.0.1#5353" -R"$(nvram get tunnel_forward)" >/dev/null 2>&1 &
 			chinadns-ng -b 0.0.0.0 -l 65353 -c $(nvram get china_dns) -t 127.0.0.1#5353 -4 china -M -m "$cdn_file" >/dev/null 2>&1 &
 			sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
 			sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
