@@ -563,6 +563,7 @@ ssp_close() {
 		rm -f /etc/storage/dnsmasq-ss.d
 	fi
 	clear_iptable
+	ipset destroy gfwlist >/dev/null 2>&1
 	log "正在重启 DNSmasq 进程..."
 	/sbin/restart_dhcpd
 	log "DNSmasq 进程已重启..."
