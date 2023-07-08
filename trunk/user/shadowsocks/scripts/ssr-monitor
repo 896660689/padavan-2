@@ -129,7 +129,7 @@ do
 	ss_chdns=$(nvram get ss_chdns)
 	if [ $ss_chdns = 1 ]; then
 		if [ $chinadnsng_process -gt 0 ] ;then
-			cdn_file='/etc/storage/chinadns/chnlist.txt''
+			cdn_file='/etc/storage/chinadns/chnlist.txt'
 			icount=`ps -w | grep chinadns-ng | grep -v grep | wc -l`
 			if [ $icount -lt $chinadnsng_process ] #如果进程挂掉就重启它
 			then
