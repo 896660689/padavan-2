@@ -106,15 +106,19 @@ do
 		fi
 	fi
 	#dns2tcp
-	if [ $pdnsd_process = 0 ] ;then
+	if [ "$pdnsd_process" = 0 ]
+	then
 		icount=`ps -w | grep dnsproxy | grep -v grep | wc -l`
 		if [ $icount = 0 ]
 		then
 			log "启动 dnsproxy：5353 端口..."
+			dnsstr="$(nvram get tunnel_forward)"
+			dnsserver=$(echo "$dnsstr" | awk -F '#' '{print $1}')
 			stop_dns
-			dnsproxy -d -p 5353 -R -R"$(nvram get tunnel_forward)" >/dev/null 2>&1 &
+			dnsproxy -T -p 5353 -R -R"$dnsserver" >/dev/null 2>&1 &
 		fi
-	elif [ $pdnsd_process = 1 ] ;then
+	elif [ "$pdnsd_process" = 1 ]
+	then
 		icount=`ps -w | grep dns2tcp | grep -v grep | wc -l`
 		if [ $icount = 0 ]
 		then
