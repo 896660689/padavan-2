@@ -331,12 +331,14 @@ start_dns_proxy() {
 	pdnsd_enable_flag=$pdnsd_enable
 	dnsstr="$(nvram get tunnel_forward)"
 	dnsserver=$(echo "$dnsstr" | awk -F '#' '{print $1}')
-	if [ $pdnsd_enable = 0 ]; then
+	if [ "$pdnsd_enable" = "0" ]
+	then
 		log "启动 dnsproxy：5353 端口..."
 		# 将dnsserver (上游国外DNS: 比如 8.8.8.8) 放入ipset:gfwlist，强制走SS_SPEC_WAN_FW代理
 		ipset add gfwlist $dnsserver 2>/dev/null
 		dnsproxy -d -p 5353 -R $dnsserver >/dev/null 2>&1 &
-	elif [ $pdnsd_enable = 1 ]; then
+	elif [ "$pdnsd_enable" = "1" ]
+	then
 		log "启动 dns2tcp：5353 端口..."
 		# 将dnsserver (上游国外DNS: 比如 8.8.8.8) 放入ipset:gfwlist，强制走SS_SPEC_WAN_FW代理
 		ipset add gfwlist $dnsserver 2>/dev/null
@@ -568,7 +570,7 @@ ssp_close() {
 	fi
 	clear_iptable
 	ipset destroy gfwlist >/dev/null 2>&1
-	log "正在重启 DNSmasq 进程..."
+
 	/sbin/restart_dhcpd
 	log "DNSmasq 进程已重启..."
 	if [ "$pppoemwan" = 0 ]; then
