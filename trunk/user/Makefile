@@ -195,7 +195,6 @@ dir_y 			+= wing
 dir_y 			+= ipt2socks
 endif
 
-dir_$(CONFIG_FIRMWARE_INCLUDE_REDSOCKS)			+= redsocks
 dir_$(CONFIG_FIRMWARE_INCLUDE_3PROXY)			+= 3proxy
 
 ifdef CONFIG_BLK_DEV_SD
