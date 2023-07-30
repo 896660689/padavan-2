@@ -2006,6 +2006,46 @@ static int shadowsocks_action_hook(int eid, webs_t wp, int argc, char **argv)
 	return 0;
 }
 
+static void
+do_applydb_cgi(char *url, FILE *stream)
+{
+    //applydb_cgi(url, stream);
+	applydb_cgi(stream, NULL, NULL, 0, url, NULL, NULL);
+}
+
+static int db_print(dbclient* client, webs_t wp, char* prefix, char* key, char* value) {
+	websWrite(wp,"o[\"%s\"]=\'%s\';\n", key, value);
+	return 0;
+}
+
+static void
+do_dbconf(char *url, FILE *stream)
+{
+	char *name = NULL;
+	char * delim = ",";
+	char *pattern = websGetVar(wp, "p","");
+	char *dup_pattern = strdup(pattern);
+	char *sepstr = dup_pattern;
+	dbclient client;
+	dbclient_start(&client);
+	if(strstr(sepstr,delim)) {
+		for(name = strsep(&sepstr, delim); name != NULL; name = strsep(&sepstr, delim)) {
+			websWrite(stream,"var db_%s=(function() {\nvar o={};\n", name);
+
+			dbclient_list(&client, name, stream, db_print);
+			websWrite(stream,"return o;\n})();\n" );
+		}
+	} else {
+		name= strdup(pattern);
+		websWrite(stream,"var db_%s=(function() {\nvar o={};\n", name);
+		dbclient_list(&client, name, stream, db_print);
+		websWrite(stream,"return o;\n})();\n" );
+	}
+	free(dup_pattern);
+	dbclient_end(&client);
+}
+#endif
+
 static int shadowsocks_status_hook(int eid, webs_t wp, int argc, char **argv)
 {
 	int ss_status_code = pids("ss-redir");
@@ -2014,9 +2054,6 @@ static int shadowsocks_status_hook(int eid, webs_t wp, int argc, char **argv)
 	}
 	if (ss_status_code == 0){
 		ss_status_code = pids("v2ray");
-	}
-	if (ss_status_code == 0){
-		ss_status_code = pids("trojan");
 	}
 	websWrite(wp, "function shadowsocks_status() { return %d;}\n", ss_status_code);
 	int ss_tunnel_status_code = pids("ss-local");
@@ -2057,11 +2094,23 @@ static int rules_count_hook(int eid, webs_t wp, int argc, char **argv)
 
 #endif
 
-#if defined(APP_DNSFORWARDER)
-static int dnsforwarder_status_hook(int eid, webs_t wp, int argc, char **argv)
+#if defined (APP_ADBYBY)
+static int adbyby_action_hook(int eid, webs_t wp, int argc, char **argv)
 {
-	int status_code = pids("dns-forwarder");
-	websWrite(wp, "function dnsforwarder_status() { return %d;}\n", status_code);
+	int needed_seconds = 3;
+	char *ad_action = websGetVar(wp, "connect_action", "");
+
+	if (!strcmp(ad_action, "updateadb")) {
+		notify_rc(RCN_RESTART_UPDATEADB);
+	}
+	websWrite(wp, "<script>restart_needed_time(%d);</script>\n", needed_seconds);
+	return 0;
+}
+
+static int adbyby_status_hook(int eid, webs_t wp, int argc, char **argv)
+{
+	int ad_status_code = pids("adbyby");
+	websWrite(wp, "function adbyby_status() { return %d;}\n", ad_status_code);
 	return 0;
 }
 #endif
@@ -2093,23 +2142,11 @@ static int dns2tcp_status_hook(int eid, webs_t wp, int argc, char **argv)
 }
 #endif
 
-#if defined (APP_ADBYBY)
-static int adbyby_action_hook(int eid, webs_t wp, int argc, char **argv)
+#if defined(APP_SHADOWSOCKS)
+static int dnsforwarder_status_hook(int eid, webs_t wp, int argc, char **argv)
 {
-	int needed_seconds = 3;
-	char *ad_action = websGetVar(wp, "connect_action", "");
-
-	if (!strcmp(ad_action, "updateadb")) {
-		notify_rc(RCN_RESTART_UPDATEADB);
-	}
-	websWrite(wp, "<script>restart_needed_time(%d);</script>\n", needed_seconds);
-	return 0;
-}
-
-static int adbyby_status_hook(int eid, webs_t wp, int argc, char **argv)
-{
-	int ad_status_code = pids("adbyby");
-	websWrite(wp, "function adbyby_status() { return %d;}\n", ad_status_code);
+	int status_code = pids("dns-forwarder");
+	websWrite(wp, "function dnsforwarder_status() { return %d;}\n", status_code);
 	return 0;
 }
 #endif
