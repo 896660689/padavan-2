@@ -521,6 +521,8 @@ struct nvram_pair router_defaults[] = {
 	{ "anti_ad", "0" },
 	{ "anti_ad_link", "https://anti-ad.net/anti-ad-for-dnsmasq.conf" },
 	{ "anti_ad_count", "0" },
+#endif
+
 #if defined(APP_ADGUARGHOME)
 	/* AdguargHome */
 	{ "adg_enable", "0" },
