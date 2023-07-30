@@ -178,21 +178,21 @@ function showSystemInfo(cpu_now,force){
 	$j("#mem_info").html(bytesToSize(sysinfo.ram.free*1024, 2) + " / " + bytesToSize(sysinfo.ram.total*1024, 2));
 	$j("#uptime_info").html(sysinfo.uptime.days + "<#Day#>".substring(0,1) + " " + h+"<#Hour#>".substring(0,1) + " " + m+"<#Minute#>".substring(0,1));
 
-	$j("#cpu_usage tr:nth-child(1) td:first").html('busy: '+cpu_now.busy+'%');
-	$j("#cpu_usage tr:nth-child(2) td:first").html('user: '+cpu_now.user+'%');
-	$j("#cpu_usage tr:nth-child(2) td:last").html('system: '+cpu_now.system+'%');
-	$j("#cpu_usage tr:nth-child(3) td:first").html('sirq: '+cpu_now.sirq+'%');
-	$j("#cpu_usage tr:nth-child(3) td:last").html('irq: '+cpu_now.irq+'%');
-	$j("#cpu_usage tr:nth-child(4) td:first").html('idle: '+cpu_now.idle+'%');
-	$j("#cpu_usage tr:nth-child(4) td:last").html('nice: '+cpu_now.nice+'%');
+	$j("#cpu_usage tr:nth-child(1) td:first").html('<#busy#>: '+cpu_now.busy+'%');
+	$j("#cpu_usage tr:nth-child(2) td:first").html('<#user#>: '+cpu_now.user+'%');
+	$j("#cpu_usage tr:nth-child(2) td:last").html('<#system#>: '+cpu_now.system+'%');
+	$j("#cpu_usage tr:nth-child(3) td:first").html('<#sirq#>: '+cpu_now.sirq+'%');
+	$j("#cpu_usage tr:nth-child(3) td:last").html('<#irq#>: '+cpu_now.irq+'%');
+	$j("#cpu_usage tr:nth-child(4) td:first").html('<#idle#>: '+cpu_now.idle+'%');
+	$j("#cpu_usage tr:nth-child(4) td:last").html('<#nice#>: '+cpu_now.nice+'%');
 
-	$j("#mem_usage tr:nth-child(1) td:first").html('total: '+bytesToSize(sysinfo.ram.total*1024, 2));
-	$j("#mem_usage tr:nth-child(2) td:first").html('free: '+bytesToSize(sysinfo.ram.free*1024, 2));
-	$j("#mem_usage tr:nth-child(2) td:last").html('used: '+bytesToSize(sysinfo.ram.used*1024, 2));
-	$j("#mem_usage tr:nth-child(3) td:first").html('cached: '+bytesToSize(sysinfo.ram.cached*1024, 2));
-	$j("#mem_usage tr:nth-child(3) td:last").html('buffers: '+bytesToSize(sysinfo.ram.buffers*1024, 2));
-	$j("#mem_usage tr:nth-child(4) td:first").html('swap: '+bytesToSize(sysinfo.swap.total*1024, 2));
-	$j("#mem_usage tr:nth-child(4) td:last").html('swap used: '+bytesToSize(sysinfo.swap.used*1024, 2));
+	$j("#mem_usage tr:nth-child(1) td:first").html('<#total#>: '+bytesToSize(sysinfo.ram.total*1024, 2));
+	$j("#mem_usage tr:nth-child(2) td:first").html('<#free#>: '+bytesToSize(sysinfo.ram.free*1024, 2));
+	$j("#mem_usage tr:nth-child(2) td:last").html('<#used#>: '+bytesToSize(sysinfo.ram.used*1024, 2));
+	$j("#mem_usage tr:nth-child(3) td:first").html('<#cached#>: '+bytesToSize(sysinfo.ram.cached*1024, 2));
+	$j("#mem_usage tr:nth-child(3) td:last").html('<#buffers#>: '+bytesToSize(sysinfo.ram.buffers*1024, 2));
+	$j("#mem_usage tr:nth-child(4) td:first").html('<#swap#>: '+bytesToSize(sysinfo.swap.total*1024, 2));
+	$j("#mem_usage tr:nth-child(4) td:last").html('<#swap used#>: '+bytesToSize(sysinfo.swap.used*1024, 2));
 
 	if(parseInt(sysinfo.wifi2.state) > 0)
 		$j('#wifi2_b').addClass('btn-info');
@@ -304,7 +304,7 @@ function show_banner(L3){
 	bc += '<table class="table table-condensed" width="100%" style="margin-bottom: 0px;">\n';
 	bc += '  <tr>\n';
 	bc += '    <td width="43%" style="text-align:left; border: 0 none;"></td>\n';
-	bc += '    <td style="border: 0 none; text-align:right;"><a class="label" href="javascript:void(0)" onclick="hide_adv_info();">hide</a></td>\n';
+	bc += '    <td style="border: 0 none; text-align:right;"><a class="label" href="javascript:void(0)" onclick="hide_adv_info();"><#hide#></a></td>\n';
 	bc += '  </tr>\n';
 	bc += '  <tr>\n';
 	bc += '    <td style="height: 20px;"></td>\n';
@@ -325,7 +325,7 @@ function show_banner(L3){
 	bc += '<table class="table table-condensed" width="100%" style="margin-bottom: 0px;">\n';
 	bc += '  <tr>\n';
 	bc += '    <td width="43%" style="text-align:left; border: 0 none;"></td>\n';
-	bc += '    <td style="border: 0 none; text-align:right;"><a class="label" href="javascript:void(0)" onclick="hide_adv_info();">hide</a></td>\n';
+	bc += '    <td style="border: 0 none; text-align:right;"><a class="label" href="javascript:void(0)" onclick="hide_adv_info();"><#hide#></a></td>\n';
 	bc += '  </tr>\n';
 	bc += '  <tr>\n';
 	bc += '    <td style="height: 20px;"></td>\n';
@@ -395,18 +395,15 @@ tabtitle[6] = new Array("", "<#menu5_6_2#>", "<#menu5_6_5#>", "<#menu5_6_1#>", "
 tabtitle[7] = new Array("", "<#menu5_10_1#>", "<#menu5_10_2#>", "<#menu5_10_3#>");
 tabtitle[8] = new Array("", "<#menu5_11#>", "<#menu5_12#>", "WAN", "", "", "", "", "", "", "");
 tabtitle[9] = new Array("", "<#menu5_7_2#>", "<#menu5_7_3#>", "<#menu5_7_5#>", "<#menu5_7_6#>", "<#menu5_7_8#>");
-if (found_app_scutclient()){
-	tabtitle[10] = new Array("", "<#menu5_1_1#>","<#menu5_13_log#>");
-}
-if (found_app_dnsforwarder()){
-	tabtitle[11] = new Array("", "<#menu5_1_1#>");
-}
+
 if (found_app_shadowsocks()){
-	tabtitle[12] = new Array("", "<#menu5_1_1#>","<#menu5_16_20#>");
+	tabtitle[10] = new Array("", "<#menu5_16#>");
+}else{
+	if (found_SSR_URL_Analysis()){
+		tabtitle[10] = new Array("", "<#menu5_16_44#>");
+	}
 }
-if (found_app_mentohust()){
-	tabtitle[13] = new Array("", "<#menu5_1_1#>","<#menu5_13_log#>");
-}
+
 if (found_app_adbyby()){
 	tabtitle[14] = new Array("", "<#menu5_20_1#>");
 }
@@ -439,18 +436,15 @@ tablink[6] = new Array("", "Advanced_System_Content.asp", "Advanced_Services_Con
 tablink[7] = new Array("", "Advanced_Tweaks_Content.asp", "Advanced_Scripts_Content.asp", "Advanced_InetDetect_Content.asp");
 tablink[8] = new Array("", "Main_WStatus2g_Content.asp", "Main_WStatus_Content.asp", "", "", "", "", "", "", "", "");
 tablink[9] = new Array("", "Main_LogStatus_Content.asp", "Main_DHCPStatus_Content.asp", "Main_IPTStatus_Content.asp", "Main_RouteStatus_Content.asp", "Main_CTStatus_Content.asp");
-if (found_app_scutclient()){
-	scutclient_array = new Array("", "scutclient.asp", "scutclient_log.asp");
-	tablink[10] = (scutclient_array);
-}
-if (found_app_dnsforwarder()){
-	dns_forwarder_array = new Array("", "dns-forwarder.asp");
-	tablink[11] = (dns_forwarder_array);
-}
+
 if (found_app_shadowsocks()){
-	shadowsocks_array = new Array("","Shadowsocks.asp","Shadowsocks_log.asp");
-	tablink[12] = (shadowsocks_array);
+	shadowsocks_array = new Array("", "Shadowsocks.asp");
+	tablink[10] = (shadowsocks_array);
+}else if (found_SSR_URL_Analysis()){
+	ssrurl_array = new Array("","SSR_URL_Analysis.asp");
+	tablink[10] = (ssrurl_array);
 }
+
 if (found_app_mentohust()){
 	mentohust_array = new Array("","mentohust.asp","mentohust_log.asp");
 	tablink[13] = (mentohust_array);
@@ -497,13 +491,12 @@ if (found_app_frp()){
 //Level 2 Menu
 menuL2_title = new Array(20)
 menuL2_title = new Array("", "<#menu5_11#>", "<#menu5_12#>", "<#menu5_2#>", "<#menu5_3#>", "<#menu5_5#>", "<#menu5_4#>", "<#menu5_6#>", "<#menu5_10#>", "<#menu5_9#>", "<#menu5_7#>");
-if (found_app_scutclient()){
-	menuL2_title.push("<#menu5_13#>");
-} else menuL2_title.push("");
 
-if (found_app_dnsforwarder()){
-	menuL2_title.push("<#menu5_15#>");
-} else menuL2_title.push("");
+if (found_app_shadowsocks()){
+	menuL2_link.push(tablink[10][1]);
+} else if (found_SSR_URL_Analysis()){
+	menuL2_title.push("ssrurl_array[1]");
+} else menuL2_link.push("");
 
 if (found_app_shadowsocks()){
 	menuL2_title.push("<#menu5_16#>");
@@ -538,17 +531,13 @@ if (found_app_frp()){
 } else menuL2_title.push("");
 
 menuL2_link  = new Array("", tablink[0][1], tablink[1][1], tablink[2][1], tablink[3][1], tablink[4][1], tablink[5][1], tablink[6][1], tablink[7][1], support_2g_radio() ? tablink[8][1] : "Main_EStatus_Content.asp", tablink[9][1]);
-if (found_app_scutclient()){
-	menuL2_link.push(scutclient_array[1]);
-} else menuL2_link.push("");
-
-if (found_app_dnsforwarder()){
-	menuL2_link.push(dns_forwarder_array[1]);
-} else menuL2_link.push("");
 
 if (found_app_shadowsocks()){
 	menuL2_link.push(shadowsocks_array[1]);
+} else if (found_SSR_URL_Analysis()){
+	menuL2_title.push("ssrurl_array[1]");
 } else menuL2_link.push("");
+
 
 if (found_app_mentohust()){
 	menuL2_link.push(mentohust_array[1]);
@@ -741,7 +730,7 @@ function show_footer(){
 	footer_code = '<div align="center" class="bottom-image"></div>\n';
 	footer_code +='<div align="center" class="copyright"><#footer_copyright_desc#></div>\n';
 	footer_code +='<div align="center">\n';
-	footer_code +='  <span>Highcharts by Torstein Hønsi & <a href="http://www.highcharts.com">Highsoft</a></span></br>\n';
+	footer_code +='  <span>Highcharts by Torstein Honsi & <a href="http://www.highcharts.com">Highsoft</a></span></br>\n';
 	footer_code +='  <span>Big icons designed by <a href="http://www.freepik.com">Freepik</a></br></span>\n';
 	footer_code +='  <span>Non-Commercial Use Only</span></br>\n';
 	footer_code +='</div>\n';
