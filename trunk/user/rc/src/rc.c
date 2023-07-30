@@ -1113,10 +1113,6 @@ handle_notifications(void)
 		{
 			update_gfwlist();
 		}
-		else if (strcmp(entry->d_name, RCN_RESTART_REDLINK) == 0)
-		{
-			reset_dlink();
-		}
 #endif
 #if defined(APP_VLMCSD)
 		else if (strcmp(entry->d_name, RCN_RESTART_VLMCSD) == 0)
