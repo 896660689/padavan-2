@@ -2092,8 +2092,6 @@ static int rules_count_hook(int eid, webs_t wp, int argc, char **argv)
 	return 0;
 }
 
-#endif
-
 #if defined (APP_ADBYBY)
 static int adbyby_action_hook(int eid, webs_t wp, int argc, char **argv)
 {
