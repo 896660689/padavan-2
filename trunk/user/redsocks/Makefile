@@ -3,10 +3,10 @@ SRC_URL=https://github.com/SuzukiHonoka/redsocks_for_mipsel/releases/download/re
 
 THISDIR = $(shell pwd)
 
-all: download_test
-	$(MAKE) -C $(SRC_NAME)
+all:
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
 
-download_test:
+clean:
 	( if [ -f $(SRC_NAME)/Makefile ] ; then \
 		$(MAKE) -C $(SRC_NAME) clean ; \
 	fi )
