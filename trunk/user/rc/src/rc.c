@@ -658,9 +658,6 @@ int
 init_crontab(void)
 {
 	int ret = 0; //no change
-#if defined (APP_SCUT)
-	ret |= system("/sbin/check_crontab.sh a/1 a a a a scutclient_watchcat.sh");
-#endif
 	return ret;
 }
 
@@ -793,16 +790,21 @@ shutdown_router(int level)
 #if defined (USE_USB_SUPPORT)
 	stop_usb_printer_spoolers();
 #endif
+#if defined (BOARD_GPIO_LED_USB)
 	LED_CONTROL(LED_USB, LED_OFF);
+#endif
+#if defined (BOARD_GPIO_LED_USB2)
 	LED_CONTROL(LED_USB2, LED_OFF);
+#endif
 
 	stop_wan();
 	if (level < 2) {
 		stop_services_lan_wan();
 		set_ipv4_forward(0);
 	}
-
+#if defined (BOARD_GPIO_LED_WAN)
 	LED_CONTROL(LED_WAN, LED_OFF);
+#endif
 
 	storage_save_time(10);
 	write_storage_to_mtd();
@@ -822,8 +824,12 @@ shutdown_router(int level)
 		module_smart_unload("hw_nat", 0);
 	}
 
+#if defined (BOARD_GPIO_LED_LAN)
 	LED_CONTROL(LED_LAN, LED_OFF);
+#endif
+#if defined (BOARD_GPIO_LED_POWER)
 	LED_CONTROL(LED_PWR, LED_OFF);
+#endif
 }
 
 void 
@@ -1807,12 +1813,6 @@ main(int argc, char **argv)
 			ret = EINVAL;
 	}
 	else {
-		printf("Unknown applet: %s\n", base);
-		ret = EINVAL;
-	}
-
-	return ret;
-		else {
 		printf("Unknown applet: %s\n", base);
 		ret = EINVAL;
 	}
