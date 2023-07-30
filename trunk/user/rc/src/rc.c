@@ -830,7 +830,7 @@ void
 handle_notifications(void)
 {
 	int i, stop_handle = 0;
-	char notify_name[300];
+	char notify_name[256];
 
 	DIR *directory = opendir(DIR_RC_NOTIFY);
 	if (!directory)
@@ -1113,10 +1113,6 @@ handle_notifications(void)
 		{
 			update_gfwlist();
 		}
-		else if (strcmp(entry->d_name, RCN_RESTART_DLINK) == 0)
-		{
-			update_dlink();
-		}
 		else if (strcmp(entry->d_name, RCN_RESTART_REDLINK) == 0)
 		{
 			reset_dlink();
@@ -1191,12 +1187,6 @@ handle_notifications(void)
 		else if (strcmp(entry->d_name, RCN_RESTART_FRP) == 0)
 		{
 			restart_frp();
-		}
-#endif
-#if defined(APP_DNSFORWARDER)
-		else if (strcmp(entry->d_name, RCN_RESTART_DNSFORWARDER) == 0)
-		{
-			restart_dnsforwarder();
 		}
 #endif
 #if defined(APP_SMBD) || defined(APP_NMBD)
@@ -1820,6 +1810,15 @@ main(int argc, char **argv)
 		else
 			ret = EINVAL;
 	}
+	else {
+		printf("Unknown applet: %s\n", base);
+		ret = EINVAL;
+	}
+
+	return ret;
+}
+
+
 	else {
 		printf("Unknown applet: %s\n", base);
 		ret = EINVAL;

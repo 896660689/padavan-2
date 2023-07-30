@@ -900,6 +900,7 @@ static const struct inadyn_system_t {
 	{ "PDD.YANDEX.RU",        "default@pdd.yandex.ru"      },
 	{ "CLOUDFLARE.COM",       "default@cloudflare.com"     },
 	{ "ORAY.COM",             "default@oray.com"           },
+	{ "WWW.PUBYUN.COM",       "dyndns@3322.org"            },
 	{ "CUSTOM",               "custom"                     },
 	{ NULL, NULL }
 };
@@ -939,6 +940,7 @@ static const struct _inadyn_checkip_url {
 	{ "checkip6.spdyn.de",        "/"     , false },
 	{ "v4.ipv6-test.com",         "/api/myip.php", true },
 	{ "v6.ipv6-test.com",         "/api/myip.php", true },
+	{ "members.3322.net/dyndns/getip",  "/"    , false  },
 };
 
 static const char *

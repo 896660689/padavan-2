@@ -540,18 +540,11 @@ void start_ss_tunnel(void);
 void restart_ss_tunnel(void);
 void update_chnroute(void);
 void update_gfwlist(void);
-void update_dlink(void);
-void reset_dlink(void);
 #endif
 #if defined(APP_VLMCSD)
 void stop_vlmcsd(void);
 void start_vlmcsd(void);
 void restart_vlmcsd(void);
-#endif
-#if defined(APP_DNSFORWARDER)
-void stop_dnsforwarder(void);
-void start_dnsforwarder(void);
-void restart_dnsforwarder(void);
 #endif
 #if defined(APP_ADBYBY)
 void stop_adbyby(void);
@@ -825,6 +818,11 @@ int  mdev_sd_main(int argc, char **argv);
 #endif
 #if defined (USE_MMC_SUPPORT)
 int  mdev_mmc_main(int argc, char **argv);
+#endif
+#endif
+
+#endif /* _rc_h_ */
+char **argv);
 #endif
 #endif
 

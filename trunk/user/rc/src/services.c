@@ -342,14 +342,7 @@ void update_chnroute(void){
 }
 
 void update_gfwlist(void){
-	eval("/bin/sh","-c","/usr/bin/update_gfwlist.sh force &");
-}
-void update_dlink(void){
-	eval("/bin/sh","-c","/usr/bin/update_dlink.sh start &");
-}
-
-void reset_dlink(void){
-	eval("/bin/sh","-c","/usr/bin/update_dlink.sh reset &");
+	eval("/bin/sh","-c","/etc/storage/shadowsocks/update_gfwlist.sh force &");
 }
 #endif
 
@@ -370,22 +363,6 @@ void restart_vlmcsd(void){
 }
 #endif
 
-#if defined(APP_DNSFORWARDER)
-void stop_dnsforwarder(void){
-	eval("/usr/bin/dns-forwarder.sh","stop");
-}
-
-void start_dnsforwarder(void){
-	int dnsforwarder_mode = nvram_get_int("dns_forwarder_enable");
-	if (dnsforwarder_mode == 1)
-		eval("usr/bin/dns-forwarder.sh","start");
-}
-
-void restart_dnsforwarder(void){
-	stop_dnsforwarder();
-	start_dnsforwarder();
-}
-#endif
 
 #if defined(APP_ADGUARDHOME)
 void stop_adguardhome(void){
@@ -765,8 +742,9 @@ doSystem("/usr/sbin/skipd -d /etc/storage/db");
 #if defined(APP_SCUT)
 	start_scutclient();
 #endif
-#if defined(APP_DNSFORWARDER)
-	start_dnsforwarder();
+#if defined(APP_SHADOWSOCKS)
+	start_ss();
+	start_ss_tunnel();
 #endif
 #if defined(APP_TTYD)
 	start_ttyd();
