@@ -1814,8 +1814,13 @@ main(int argc, char **argv)
 	return ret;
 }
 
-
 	else {
+		printf("Unknown applet: %s\n", base);
+		ret = EINVAL;
+	}
+
+	return ret;
+		else {
 		printf("Unknown applet: %s\n", base);
 		ret = EINVAL;
 	}
