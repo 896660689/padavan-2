@@ -34,7 +34,7 @@ struct nvram_pair router_defaults[] = {
 
 	/* Miscellaneous parameters */
 	{ "time_zone", DEF_TIMEZONE },
-	{ "log_float_ui", "1" },		/* WebUI syslog float panel mode */
+	{ "log_float_ui", "0" },		/* WebUI syslog float panel mode */
 	{ "log_ipaddr", "" },			/* syslog recipient IP */
 	{ "log_port", "514" },			/* syslog recipient Port */
 	{ "log_level", "0" },			/* Bitmask 0:off 1:denied 2:accepted */
@@ -78,7 +78,7 @@ struct nvram_pair router_defaults[] = {
 	{ "wan_ttl_value", "0" },
 	{ "wan_hwaddr_x", "" },
 	{ "wan_nat_x", "1" },
-	{ "wan_mtu", "1500" },
+	{ "wan_mtu", "1492" },
 	{ "wan_auth_mode", "0" },
 	{ "wan_auth_user", "" },
 	{ "wan_auth_pass", "" },
@@ -138,8 +138,8 @@ struct nvram_pair router_defaults[] = {
 	{ "wan_ppp_peer", "" },			/* VPN server address */
 	{ "wan_ppp_auth", "0" },		/* PPP authentication */
 	{ "wan_ppp_mppe", "0" },		/* MPPE encryption */
-	{ "wan_ppp_lcp", "1" },
-	{ "wan_ppp_alcp", "0" },		/* Adaptive LCP Echo */
+	{ "wan_ppp_alcp", "1" },		/* Adaptive LCP Echo */
+	{ "wan_ppp_lcp", "0" },			/* Adaptive LCP Echo */
 	{ "wan_ppp_pppd", "" },			/* Custom PPPD options */
 
 	/* Exposed station */
@@ -149,13 +149,13 @@ struct nvram_pair router_defaults[] = {
 	{ "http_username", SYS_USER_ROOT },	/* Username */
 	{ "http_passwd", DEF_ROOT_PASSWORD },	/* Password */
 	{ "http_access", "0" },			/* HTTP access (0: ALL, 1: LAN only, 2: LAN + Wireless MainAP) */
-	{ "http_proto", "0" },			/* HTTP proto (0: HTTP, 1: HTTPS, 2: Both) */
+	{ "http_proto", "2" },			/* HTTP proto (0: HTTP, 1: HTTPS, 2: Both) */
 	{ "http_lanport", "80" },		/* HTTP LAN port to listen on */
 	{ "https_lport", "443" },		/* HTTPS LAN port to listen on */
 	{ "https_clist", DEF_HTTPS_CIPH_LIST },	/* HTTPS SSL cipher list */
-	{ "fw_dos_x", "0" },			// oleg patch
+	{ "fw_dos_x", "1" },			// oleg patch
 	{ "dr_enable_x", "1" },			// oleg patch
-	{ "mr_enable_x", "0" },			// oleg patch
+	{ "mr_enable_x", "1" },			// oleg patch
 	{ "mr_qleave_x", "1" },
 
 #if BOARD_HAS_5G_RADIO
@@ -187,17 +187,17 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_key2", "" },			/* 5/13 char ASCII or 10/26 char hex */
 	{ "wl_key3", "" },			/* 5/13 char ASCII or 10/26 char hex */
 	{ "wl_key4", "" },			/* 5/13 char ASCII or 10/26 char hex */
-	{ "wl_key_type", "0" } ,		/* WEP key format (HEX/ASCII)*/
+	{ "wl_key_type", "0" },			/* WEP key format (HEX/ASCII)*/
 	{ "wl_mrate", "2" },			/* Mcast Rate */
 	{ "wl_crypto", "aes" },			/* WPA data encryption */
-	{ "wl_wpa_psk", DEF_WLAN_5G_PSK },			/* WPA pre-shared key */
+	{ "wl_wpa_psk", DEF_WLAN_5G_PSK },	/* WPA pre-shared key */
 	{ "wl_wpa_gtk_rekey", "3600" },		/* GTK rotation interval */
 	{ "wl_radius_ipaddr", ""},		/* RADIUS server IP address */
 	{ "wl_radius_port", "1812" },		/* RADIUS server UDP port */
 	{ "wl_radius_key", "" },		/* RADIUS shared secret */
-	{ "wl_radio_x", "1" },			/* Enable (1) or disable (0) radio */
+	{ "wl_radio_x", "0" },			/* Enable (1) or disable (0) radio */
 	{ "wl_IgmpSnEnable", "1" },
-	{ "wl_TxPower", "100" },
+	{ "wl_TxPower", "90" },
 	{ "wl_TxBurst", "1" },
 	{ "wl_PktAggregate", "1" },
 	{ "wl_APSDCapable", "0" },
@@ -207,7 +207,7 @@ struct nvram_pair router_defaults[] = {
 #else
 	{ "wl_HT_BW", "1" },
 #endif
-	{ "wl_txbf", "1" },
+	{ "wl_txbf", "0" },
 	{ "wl_ssid2",  DEF_WLAN_5G_SSID },
 	{ "wl_mode_x", "0" },
 	{ "wl_wdsapply_x", "0" },
@@ -279,7 +279,7 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_gmode", "5" },			/* g/n mixed */
 #endif
 	{ "rt_mcs_mode", "0" },
-	{ "rt_channel", "0" },
+	{ "rt_channel", "13" },
 	{ "rt_bcn", "100" },
 	{ "rt_dtim", "1" },
 	{ "rt_gmode_protection", "auto" },
@@ -296,7 +296,7 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_wme", "1" },
 	{ "rt_wme_no_ack", "off" },
 	{ "rt_IgmpSnEnable", "1" },
-	{ "rt_TxPower", "100" },
+	{ "rt_TxPower", "85" },
 	{ "rt_TxBurst", "1" },
 	{ "rt_PktAggregate", "1" },
 	{ "rt_APSDCapable", "0" },
@@ -331,6 +331,7 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_stream_rx", STR(BOARD_NUM_ANT_2G_RX) },
 	{ "rt_preamble", "1" },
 	{ "rt_greenap", "0" },
+	{ "rt_ldpc", "0" },
 	{ "rt_HT_RDG", "0" },
 	{ "rt_HT_AMSDU", "0" },
 	{ "rt_HT_MpduDensity", "5" },
@@ -379,7 +380,7 @@ struct nvram_pair router_defaults[] = {
 	{ "acc_num", "0" },
 	{ "enable_ftp", "0" },
 	{ "enable_samba", "0" },
-	{ "st_samba_fp", "0" },
+	{ "st_samba_fp", "1" },
 	{ "st_samba_mode", "1" },
 	{ "st_samba_lmb", "1" },
 	{ "st_samba_workgroup", DEF_SMB_WORKGROUP },
@@ -419,7 +420,8 @@ struct nvram_pair router_defaults[] = {
 	{ "hdd_spindt", "0" },
 	{ "hdd_apmoff", "0" },
 
-	{ "ip6_service", "dhcp6" },			/* IPV6 */
+	{ "ip6_service", "" },
+	{ "ip6_ppe_on", "0" },
 	{ "ip6_wan_if", "0" },
 
 	{ "ip6_6in4_remote", "" },
@@ -436,22 +438,22 @@ struct nvram_pair router_defaults[] = {
 	{ "ip6_wan_size", "64" },
 	{ "ip6_wan_gate", "" },
 
-	{ "ip6_dns_auto", "0" },
+	{ "ip6_dns_auto", "1" },
 	{ "ip6_dns1", "" },
 	{ "ip6_dns2", "" },
 	{ "ip6_dns3", "" },
 
-	{ "ip6_lan_auto", "0" },
+	{ "ip6_lan_auto", "1" },
 	{ "ip6_lan_addr", "" },
 	{ "ip6_lan_size", "64" },
 	{ "ip6_lan_radv", "1" },
-	{ "ip6_lan_dhcp", "1" },
+	{ "ip6_lan_dhcp", "3" },
 	{ "ip6_lan_sflt", "1800" },
-	{ "ip6_lan_sfps", "4096" }, // 0x1000
-	{ "ip6_lan_sfpe", "4352" }, // 0x1100
+	{ "ip6_lan_sfps", "4096" },		// 0x1000
+	{ "ip6_lan_sfpe", "4352" },		// 0x1100
 
 	{ "upnp_enable_x", "1" },
-	{ "upnp_proto", "0" },
+	{ "upnp_proto", "2" },
 	{ "upnp_secure", "1" },
 	{ "upnp_clean_min", "10" },
 	{ "upnp_clean_int", "600" },
@@ -464,15 +466,15 @@ struct nvram_pair router_defaults[] = {
 	{ "sp_battle_ips", "0" },
 	{ "fw_log_x", "none" },
 	{ "misc_http_x", "0" },
-	{ "misc_httpport_x", "8080" },
+	{ "misc_httpport_x", "8228" },
 	{ "https_wopen", "0" },
-	{ "https_wport", "8443" },
+	{ "https_wport", "443" },
 	{ "udpxy_wopen", "0" },
-	{ "udpxy_wport", "34040" },
+	{ "udpxy_wport", "4040" },
 	{ "ftpd_wopen", "0" },
 	{ "ftpd_wport", "21" },
 	{ "sshd_wopen", "0" },
-	{ "sshd_wport", "10022" },
+	{ "sshd_wport", "22" },
 	{ "sshd_wbfp", "2" },
 	{ "misc_lpr_x", "0" },
 	{ "misc_ping_x", "0" },
@@ -501,164 +503,7 @@ struct nvram_pair router_defaults[] = {
 	{ "dr_staticnetmask_x", "0" },
 	{ "dr_staticgateway_x", "" },
 
-#if defined(APP_SCUT)
-	/* scutclient related */
-	{ "scutclient_enable", "0" },
-	{ "scutclient_debug", "0" },
-	{ "scutclient_hostname", "Lenovo-PC" },
-	{ "scutclient_server_auth_ip", "202.38.210.131" },
-	{ "scutclient_skip_udp_hb", "0" },
-	{ "scutclient_version", "4472434f4d0096022a" },
-	{ "scutclient_hash", "2ec15ad258aee9604b18f2f8114da38db16efd00" },
-	{ "scutclient_username", "" },
-	{ "scutclient_password", "" },
-	{ "scutclient_watchcat", "1" },
-	{ "scutclient_wdg_force", "1" },
-#endif
-
-#if defined(APP_MENTOHUST)
-	/* mentohust related */
-	{ "mentohust_enable", "0" },
-	{ "mentohust_username", "" },
-	{ "mentohust_password", "" },
-	{ "mentohust_nic", "" },
-	{ "mentohust_ip", "" },
-	{ "mentohust_mask", "" },
-	{ "mentohust_gw", "" },
-	{ "mentohust_dns", "" },
-	{ "mentohust_pinghost", "" },
-	{ "mentohust_timeout", "8" },
-	{ "mentohust_interval", "30" },
-	{ "mentohust_restart_wait", "15" },
-	{ "mentohust_maxfail", "0" },
-	{ "mentohust_startmode", "1" },
-	{ "mentohust_dhcp", "0" },
-	{ "mentohust_daemon", "1" },
-	{ "mentohust_service", "0" },
-	{ "mentohust_ver", "0.00" },
-	{ "mentohust_datafile", "/etc/storage/mentohust/" },
-	{ "mentohust_dhcpscript", "" },
-#endif
-
-#if defined(APP_TTYD)
-	/* ttyd related */
-	{ "ttyd_enable", "0" },
-	{ "ttyd_port", "7681" },
-#endif
-
-#if defined(APP_VLMCSD)
-	/* vlmcsd */
-	{ "vlmcsd_enable", "0" },
-#endif
-
-#if defined(APP_DNSFORWARDER)
-	/* dns-forwarder */
-	{ "dns_forwarder_enable", "0" },
-	{ "dns_forwarder_port", "5353" },
-	{ "dns_forwarder_bind", "0.0.0.0" },
-	{ "dns_forwarder_server", "8.8.4.4:53" },
-#endif
-
-#if defined(APP_SHADOWSOCKS)
-	/* shadowsocks */
-	{ "ss_type", "0" },
-	{ "global_server", "nil" },
-	{ "backup_server", "nil" },
-	{ "udp_relay_server", "nil" },
-	{ "ss_threads", "0" },
-	{ "ss_run_mode", "gfw" },
-	{ "pdnsd_enable", "0" },
-	{ "s_dports", "0" },
-	{ "ssp_local_port", "1080" },
-	{ "china_dns", "223.5.5.5#53" },
-	{ "tunnel_forward", "8.8.8.8#53" },
-	{ "ssp_dns_ip", "2" },
-	{ "socks5_enable", "0" },
-	{ "socks5_wenable", "0" },
-	{ "socks5_port", "1088" },
-	{ "socks5_aenable", "0" },
-	{ "socks5_s_username", "" },
-	{ "socks5_s_password", "" },
-	{ "ss_cgroups", "0" },
-	{ "ss_cgoups_cpu_s", "512" },
-	{ "ss_cgoups_mem_s", "20M" },
-	{ "ss_watchcat", "1" },
-	{ "lan_con", "0" },
-	{ "ss_chnroute_url", "https://ispip.clang.cn/all_cn.txt"},
-	{ "ss_adblock_url", "https://gitee.com/privacy-protection-tools/anti-ad/raw/master/anti-ad-for-dnsmasq.conf"},
-	{ "ss_schedule_enable", "0" },
-	{ "ss_schedule", "00000000000" },
-
-	{ "ss_enable", "0" },
-	{ "ss_mode", "1" },
-	{ "ss_server", "127.0.0.1" },
-	{ "ss_server_port", "8989" },
-	{ "ss_key", "Secret" },
-	{ "ss_method", "rc4-md5" },
-	{ "ss_chdns", "0" },
-	{ "ss_own", "1" },
-	{ "ss_local_port", "1080" },
-	{ "ss_mtu", "1492" },
-	{ "ss_router_proxy", "1" },
-	{ "ss_lower_port_only", "1" },
-	{ "ss_timeout", "60"},
-	{ "ss_protocol", "origin"},
-	{ "ss_proto_param", ""},
-	{ "ss_obfs", "plain"},
-	{ "ss_obfs_param", ""},
-
-	{ "ss-tunnel_enable", "0" },
-	{ "ss-tunnel_local_port", "5353" },
-	{ "ss-tunnel_remote", "8.8.4.4:53" },
-	{ "ss-tunnel_mtu", "1492" },
-	
-	{ "ss_update_chnroute", "0" },
-	{ "ss_update_gfwlist", "0" },
-	{ "ssp_staticnum_x", "0" },
-	
-	{ "v2_type_tcp", "none" },
-	{ "v2_type_mkcp", "none" },
-	{ "v2_mkcp_mtu", "1350" },
-	{ "v2_mkcp_tti", "50" },
-	{ "v2_mkcp_uplink", "50" },
-	{ "v2_mkcp_downlink", "20" },
-	{ "v2_mkcp_readbu", "2" },
-	{ "v2_mkcp_writebu", "2" },
-	{ "v2_mkcp_congestion", "0" },
-	{ "v2_webs_host", "" },
-	{ "v2_webs_path", "" },
-	{ "v2_http2_host", "" },
-	{ "v2_http2_path", "" },
-	{ "v2_tls", "0" },
-	{ "v2_mux", "0" },
-	
-	/*SS 订阅*/
-	{ "ss_list", "0" },
-	{ "d_server", "" },
-	{ "d_port", "" },
-	{ "d_type", "" },
-	{ "ud_type", "" },
-	{ "s5_type", "" },
-	{ "d_v2_aid", "" },
-	{ "d_v2_uid", "" },
-	{ "d_v2_security", "" },
-	{ "d_v2_net", "" },
-	{ "d_v2_type", "" },
-	{ "d_v2_host", "" },
-	{ "d_v2_path", "" },
-	{ "d_v2_tls", "" },
-	{ "d_ss_password", "" },
-	{ "d_ss_method", "" },
-	{ "d_ss_protocol", "" },
-	{ "d_ss_protoparam", "" },
-	{ "d_ss_obfs", "" },
-	{ "d_ss_obfsparam", "" },
-	{ "d_keyword_n", "" },
-	{ "d_keyword_y", "" },
-	{ "d_update_link", "" },
-	{ "ss_keyword", "过期时间/剩余流量" },
-#endif
-	
+#if defined(APP_ADBYBY)
 	/*Adbyby PlUS+*/
 	{ "adbyby_enable", "0" },
 	{ "adbyby_set", "0" },
@@ -676,30 +521,18 @@ struct nvram_pair router_defaults[] = {
 	{ "anti_ad", "0" },
 	{ "anti_ad_link", "https://anti-ad.net/anti-ad-for-dnsmasq.conf" },
 	{ "anti_ad_count", "0" },
-	/* Pdnsd */
-	{ "dns_enable", "0" },
-	{ "dns_server", "223.5.5.5,114.114.114.114" },
-	{ "dns_server_port", "5333" },
-	{ "dns_server_bind", "0.0.0.0" },
-	/* Aliddns */
-	{ "aliddns_enable", "0" },
-	{ "aliddns_interval", "600" },
-	{ "aliddns_ttl", "600" },
-	{ "aliddns_ak", ""  },
-	{ "aliddns_sk", "" },
-	{ "aliddns_name", "" },
-	{ "aliddns_name2", "" },
-	{ "aliddns_name6", "" },
-	{ "aliddns_domain", "" },
-	{ "aliddns_domain2", "" },
-	{ "aliddns_domain6", "" },
-	
-#if defined(APP_ADGUARDHOME)	
+#if defined(APP_ADGUARGHOME)
 	/* AdguargHome */
 	{ "adg_enable", "0" },
 	{ "adg_redirect", "0" },
 #endif
-	
+
+#if defined(APP_TTYD)
+	/* ttyd related */
+	{ "ttyd_enable", "0" },
+	{ "ttyd_port", "7681" },
+#endif
+
 #if defined(APP_CADDY)	
 	/*caddy*/
 	{ "caddy_enable", "0" },
@@ -713,48 +546,53 @@ struct nvram_pair router_defaults[] = {
 	{ "caddy_wname", "admin" },
 	{ "caddy_wpassword", "admin" },
 #endif
-	
+
 #if defined(APP_FRP)
 	/*frp*/
 	{ "frpc_enable", "0" },
 	{ "frps_enable", "0" },
 #endif
-	
-#if defined(APP_SMARTDNS)	
-	/*SmartDns*/
-	{ "sdns_enable", "0" },
-	{ "snds_name", "smartdns" },
-	{ "sdns_port", "6053" },
-	{ "sdns_tcp_server", "0" },
-	{ "sdns_ipv6_server", "0" },
-	{ "snds_ip_change", "0" },
-	{ "snds_ip_change_time", "30" },
-	{ "sdns_ipv6", "0" },
-	{ "sdns_www", "0" },
-	{ "sdns_www", "0" },
-	{ "sdns_exp", "0" },
-	{ "snds_redirect", "0" },
-	{ "snds_cache", "0" },
-	{ "sdns_ttl", "300" },
-	{ "sdns_ttl_min", "60" },
-	{ "sdns_ttl_max", "86400" },
-	{ "sdns_coredump", "0" },
-	{ "sdnss_staticnum_x", "0" },
-	{ "sdnse_enable", "0" },
-	{ "sdnse_port", "7053" },
-	{ "sdnse_tcp", "0" },
-	{ "sdnse_speed", "0" },
-	{ "sdnse_name", "" },
-	{ "sdnse_address", "0" },
-	{ "sdnse_ns", "0" },
-	{ "sdnse_ipset", "0" },
-	{ "sdnse_as", "0" },
-	{ "sdnse_ipc", "0" },
-	{ "sdnse_cache", "0" },
-	{ "ss_white", "0" },
-	{ "ss_black", "0" },
+
+#if defined(APP_SHADOWSOCKS)
+	/* shadowsocks */
+	{ "ss_type", "1" },			//0=ss;1=ssr
+	{ "ss_enable", "0" },
+	{ "ss_mode", "1" },			//0:Agente-Global;1:chnroute;2:gfwlist;3:v2ray;4:trojan
+	{ "ss_server", "127.0.0.1" },
+	{ "ss_server_port", "8989" },
+	{ "ss_key", "Secret" },
+	{ "ss_method", "aes-256-cfb" },
+	{ "ss_udp", "0" },
+	{ "ss_local_port", "1080" },
+	{ "ss_mtu", "1492" },
+	{ "ss_router_proxy", "2" },		//0:Kong;1:Self agency;2:dns-forwarder;3:dnsproxy;4:pdnsd;5:dns2tcp
+	{ "ss_lower_port_only", "1" },		//1:22-1023;2:53,80,443
+	{ "ss_timeout", "60"},
+	{ "ss_protocol", "origin"},
+	{ "ss_proto_param", ""},
+	{ "ss_obfs", "plain"},
+	{ "ss_obfs_param", ""},
+
+	{ "ss2_server", "127.0.0.1" },
+	{ "ss2_server_port", "8989" },
+	{ "ss2_key", "Secret" },
+	{ "ss2_method", "rc4-md5" },
+	{ "ss2_protocol", "origin"},
+	{ "ss2_proto_param", ""},
+	{ "ss2_obfs", "plain"},
+	{ "ss2_obfs_param", ""},
+
+	{ "ss-tunnel_enable", "0" },
+	{ "ss-tunnel_local_port", "5757" },
+	{ "ss-tunnel_remote", "8.8.4.4:53" },
+	{ "ss-tunnel_mtu", "1492" },
+
+	{ "ss_watchcat", "0" },
+	{ "ss_dns", "0" },
+	{ "ss_update_chnroute", "0" },
+	{ "ss_update_gfwlist", "0" },
 #endif
-	
+
 	/*UnblockNeteaseMusic*/
 	{ "wyy_enable", "0" },
 	{ "wyy_apptype", "cloud" },
@@ -765,13 +603,14 @@ struct nvram_pair router_defaults[] = {
 	{ "wyy_flac", "0" },
 	{ "wyy_staticnum_x", "0" },
 	
+#if defined(APP_ZEROTIER)
 	/*Zerotier*/
 	{ "zerotier_enable", "0" },
 	{ "zerotier_id", "" },
 	{ "zerotier_nat", "0" },
 	{ "zerotier_secret", "" },
 	{ "zero_staticnum_x", "0" },
-
+#endif
 	/*DDNSTO*/
 	{ "ddnsto_enable", "0" },
 	{ "ddnsto_id", "" },
@@ -821,13 +660,13 @@ struct nvram_pair router_defaults[] = {
 #if defined(APP_SMARTDNS)
 	/*SmartDns*/
 	{ "sdns_enable", "0" },
-	{ "snds_name", "smartdns" },
+	{ "snds_name", "chain" },
 	{ "sdns_port", "6053" },
 	{ "sdns_tcp_server", "0" },
 	{ "sdns_ipv6_server", "0" },
 	{ "snds_ip_change", "0" },
 	{ "snds_ip_change_time", "30" },
-	{ "sdns_ipv6", "1" },
+	{ "snds_ipv6", "1" },
 	{ "sdns_www", "1" },
 	{ "sdns_exp", "1" },
 	{ "sdns_exp_ttl", "0" },
@@ -849,7 +688,7 @@ struct nvram_pair router_defaults[] = {
 	{ "sdnse_port", "7053" },
 	{ "sdnse_tcp", "0" },
 	{ "sdnse_speed", "0" },
-	{ "sdnse_name", "" },
+	{ "sdnse_name", "oversea" },
 	{ "sdnse_address", "0" },
 	{ "sdnse_ns", "0" },
 	{ "sdnse_ipset", "0" },
@@ -863,9 +702,10 @@ struct nvram_pair router_defaults[] = {
 	{ "sdns_change2", "2" },
 #endif
 
+
 	/* DHCP server parameters */
-	{ "dhcp_start", DEF_LAN_DHCP_BEG },	/* First assignable DHCP address */
-	{ "dhcp_end", DEF_LAN_DHCP_END },	/* Last assignable DHCP address */
+	{ "dhcp_start", "192.168.2.2" },	/* First assignable DHCP address */
+	{ "dhcp_end", "192.168.2.80" },		/* Last assignable DHCP address */
 	{ "dhcp_enable_x", "1" },
 	{ "dhcp_lease", "86400" },
 	{ "dhcp_gateway_x", "" },
@@ -874,7 +714,6 @@ struct nvram_pair router_defaults[] = {
 	{ "dhcp_dns3_x", "" },
 	{ "dhcp_dnsv6_x", "" },
 	{ "dhcp_wins_x", "" },
-	{ "dhcp_filter_aaa", "0" },
 	{ "dhcp_verbose", "0" },		/* 0 : quiet, 1: verbose DHCP, 2: verbose DHCPv6, 3: verbose all */
 	{ "dhcp_static_x", "0" },
 	{ "dhcp_static_arp", "0" },
@@ -887,29 +726,26 @@ struct nvram_pair router_defaults[] = {
 
 	/* DDNS parameters */
 	{ "ddns_enable_x", "0" },
-	{ "ddns_server_x", "" },
+	{ "ddns_server_x", "WWW.PUBYUN.COM" },
 	{ "ddns_username_x", "" },
 	{ "ddns_passwd_x", "" },
 	{ "ddns_hostname_x", "" },
 	{ "ddns_hostname2_x", "" },
 	{ "ddns_hostname3_x", "" },
 	{ "ddns_wildcard_x", "0" },
-	{ "ddns2_wildcard_x", "0" },
-	{ "ddns_ipv6", "0" },
 	{ "ddns_cst_svr", "" },
 	{ "ddns_cst_url", "" },
 	{ "ddns_period", "24" },
 	{ "ddns_forced", "10" },
 	{ "ddns_verbose", "1" },
-	{ "ddns_source", "0" },
+	{ "ddns_source", "1" },
 	{ "ddns_checkip", "0" },
-	{ "ddns2_checkip", "0" },
-	{ "ddns_ssl", "0" },
+	{ "ddns_ssl", "1" },
 	{ "ddns2_server", "" },
 	{ "ddns2_hname", "" },
 	{ "ddns2_user", "" },
 	{ "ddns2_pass", "" },
-	{ "ddns2_ssl", "0" },
+	{ "ddns2_ssl", "1" },
 	{ "asusddns_tos_agreement", "0" },
 
 	{ "preferred_lang", "CN" },
@@ -954,15 +790,15 @@ struct nvram_pair router_defaults[] = {
 	{ "di_timeout", "2" },
 	{ "di_time_done", "30" },
 	{ "di_time_fail", "5" },
-	{ "di_lost_delay", "1" },
+	{ "di_lost_delay", "10" },
 	{ "di_lost_action", "0" },
 	{ "di_recon_pause", "0" },
-	{ "di_addr0", "114.114.114.114" },
-	{ "di_addr1", "208.67.222.222" },
-	{ "di_addr2", "14.17.42.40" },
-	{ "di_addr3", "8.8.8.8" },
+	{ "di_addr0", "208.67.222.222" },
+	{ "di_addr1", "8.8.8.8" },
+	{ "di_addr2", "223.5.5.5" },
+	{ "di_addr3", "208.67.220.220" },
 	{ "di_addr4", "8.8.4.4" },
-	{ "di_addr5", "208.67.220.220" },
+	{ "di_addr5", "185.228.168.168" },
 	{ "di_port0", "53" },
 	{ "di_port1", "53" },
 	{ "di_port2", "80" },
@@ -980,11 +816,12 @@ struct nvram_pair router_defaults[] = {
 
 	{ "telnetd", "0" },
 	{ "sshd_enable", "1" },
+	{ "sshd_acfp", "0" },
 	{ "wins_enable", "0" },
 	{ "lltd_enable", "1" },
 	{ "adsc_enable", "0" },
 	{ "crond_enable", "1" },
-	{ "crond_log", "0" },
+	{ "crond_log", "1" },
 
 #if defined(BOARD_N65U)
 	{ "inic_disable", "0" },
@@ -993,27 +830,32 @@ struct nvram_pair router_defaults[] = {
 	{ "wol_mac_last", "" },
 	{ "gw_arp_ping", "0" },
 	{ "ez_action_short", "0" },
-#if defined(BOARD_K2P)
-	{ "ez_action_long", "15" },
+#if !defined(BOARD_GPIO_BTN_RESET)
+	{ "ez_action_long", "15" },		/* Reset */
 #else
 	{ "ez_action_long", "0" },
 #endif
+#if defined (BOARD_GPIO_BTN_FN1)
 	{ "fn1_action_short", "0" },
 	{ "fn1_action_long", "0" },
+#endif
+#if defined (BOARD_GPIO_BTN_FN2)
 	{ "fn2_action_short", "0" },
 	{ "fn2_action_long", "0" },
+#endif
 	{ "watchdog_cpu", "1" },
 	{ "front_led_all", "1" },
 	{ "front_led_wan", "2" },
 	{ "front_led_lan", "2" },
-	{ "front_led_wif", "1" },
+	{ "front_led_wif", "0" },
 	{ "front_led_usb", "1" },
 	{ "front_led_pwr", "1" },
 
-	{ "ether_igmp", "1" },
-	{ "ether_uport", "0" },		/* WAN port in AP mode is static upstream by default */
+	{ "ether_igmp", "0" },
+	{ "ether_uport", "0" },			/* WAN port in AP mode is static upstream by default */
 	{ "ether_m2u", "2" },
 	{ "ether_green", "1" },
+	{ "ether_eee", "0" },
 #if defined(USE_RTL8367)
 	{ "ether_jumbo", "1" },
 #else
@@ -1049,9 +891,9 @@ struct nvram_pair router_defaults[] = {
 	{ "hw_nat_mode", "1" },
 	{ "sw_nat_mode", "0" },
 #if defined(USE_SFE)
-	{ "sfe_enable", "2" },
+	{ "sfe_enable", "0" },
 #endif
-	{ "fw_syn_cook", "0" },
+	{ "fw_syn_cook", "1" },
 	{ "fw_mac_drop", "0" },
 	{ "nf_nat_type", "2" },
 	{ "nf_nat_loop", "1" },
@@ -1066,18 +908,19 @@ struct nvram_pair router_defaults[] = {
 	{ "nf_alg_ftp1", "" },
 	{ "nf_alg_pptp", "0" },
 	{ "nf_alg_h323", "0" },
+	{ "nf_alg_rtsp", "0" },
 	{ "nf_alg_sip", "0" },
 
-	{ "help_enable", "1" },
+	{ "help_enable", "0" },
 
 	{ "vpns_enable", "0" },
-	{ "vpns_type", "0" },
+	{ "vpns_type", "2" },
 	{ "vpns_cast", "0" },
 	{ "vpns_auth", "0" },
 	{ "vpns_mppe", "1" },
 	{ "vpns_mtu", "1450" },
 	{ "vpns_mru", "1450" },
-	{ "vpns_vuse", "0" },
+	{ "vpns_vuse", "2" },
 	{ "vpns_vnet", "10.8.0.0" },
 	{ "vpns_actl", "0" },
 	{ "vpns_cli0", "245" },
@@ -1101,7 +944,7 @@ struct nvram_pair router_defaults[] = {
 	{ "vpnc_dgw", "0" },
 
 	{ "vpns_ov_mode", "1" },
-	{ "vpns_ov_prot", "0" },
+	{ "vpns_ov_prot", "1" },
 	{ "vpns_ov_port", "1194" },
 	{ "vpns_ov_mdig", "1" },
 	{ "vpns_ov_ciph", "15" },
@@ -1109,7 +952,7 @@ struct nvram_pair router_defaults[] = {
 	{ "vpns_ov_compress", "2" },
 	{ "vpns_ov_atls", "0" },
 	{ "vpns_ov_tcv2", "0" },
-	{ "vpns_ov_rdgw", "0" },
+	{ "vpns_ov_rdgw", "1" },
 	{ "vpnc_ov_mode", "1" },
 	{ "vpnc_ov_cnat", "0" },
 	{ "vpnc_ov_prot", "0" },
@@ -1120,7 +963,6 @@ struct nvram_pair router_defaults[] = {
 	{ "vpnc_ov_ncp_clist", DEF_OVPNC_CIPH_LIST },
 	{ "vpnc_ov_compress", "2" },
 	{ "vpnc_ov_atls", "0" },
-
 #if defined(APP_XTU)
 	/* xTun */
 	{ "xTun_iface", "tun0" },
@@ -1168,40 +1010,7 @@ struct nvram_pair tables_defaults[] = {
 	{ "sr_gateway_x", "" },
 	{ "sr_matric_x", "" },
 	{ "sr_if_x", "" },
-#if defined(APP_SHADOWSOCKS)
-	{ "ssp_type_x", "" },
-	{ "ssp_name_x", "" },
-	{ "ssp_server_x", "" },
-	{ "ssp_prot_x", "" },
-	{ "switch_enable_x", "1" },
-	{ "ss_key_x", "" },
-	{ "s5_username_x", "" },
-	{ "s5_password_x", "" },
-	{ "ss_method_x", "" },
-	{ "ss_protocol_x", "" },
-	{ "ss_proto_param_x", "" },
-	{ "ss_obfs_x", "" },
-	{ "ss_obfs_param_x", "" },
-	//{ "ssp_local_port_x", "" },
-	{ "v2_aid_x", "" },
-	{ "v2_vid_x", "" },
-	{ "v2_security_x", "" },
-	{ "v2_net_x", "" },
-	{ "v2_type_tcp_x", "none" },
-	{ "v2_type_mkcp_x", "none" },
-	{ "v2_mkcp_mtu_x", "1350" },
-	{ "v2_mkcp_tti_x", "50" },
-	{ "v2_mkcp_uplink_x", "50" },
-	{ "v2_mkcp_downlink_x", "20" },
-	{ "v2_mkcp_readbu_x", "2" },
-	{ "v2_mkcp_writebu_x", "2" },
-	{ "v2_mkcp_congestion_x", "0" },
-	{ "v2_webs_host_x", "" },
-	{ "v2_webs_path_x", "" },
-	{ "v2_http2_host_x", "" },
-	{ "v2_http2_path_x", "" },
-	{ "v2_tls_x", "0" },
-#endif
+
 #if defined(APP_SMARTDNS)
 	{ "sdnss_enable_x", "" },
 	{ "sdnss_name_x", "" },
@@ -1245,3 +1054,4 @@ struct nvram_pair tables_defaults[] = {
 
 	{ 0, 0 }
 };
+

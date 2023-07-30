@@ -66,14 +66,8 @@
 #define RCN_RESTART_VLMCSD		"restart_vlmcsd"
 #define RCN_RESTART_SHADOWSOCKS	"restart_shadowsocks"
 #define RCN_RESTART_CHNROUTE_UPD	"restart_chnroute_upd"
-#define RCN_RESTART_DNSFORWARDER	"restart_dns_forwarder"
 #define RCN_RESTART_SS_TUNNEL		"restart_ss_tunnel"
 #define RCN_RESTART_GFWLIST_UPD		"restart_gfwlist_upd"
-#define RCN_RESTART_DLINK		"restart_dlink"
-#define RCN_RESTART_REDLINK		"restart_redlink"
-#define RCN_RESTART_KOOLPROXY		"restart_koolproxy"
-#define RCN_RESTART_ADGUARDHOME		"restart_adguardhome"
-#define RCN_RESTART_KPUPDATE	"update_kp"
 #define RCN_RESTART_ADBYBY		"restart_adbyby"
 #define RCN_RESTART_ADGUARDHOME		"restart_adguardhome"
 #define RCN_RESTART_UPDATEADB	"update_adb"
@@ -100,3 +94,4 @@ extern void notify_rc_and_wait(const char *event_name, int wait_sec);
 
 
 #endif /* NOTIFY_RC_H */
+
