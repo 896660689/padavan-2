@@ -7,7 +7,6 @@ on:
         type: choice
         description: 'target to compile'
         options:
-        - Phicomm_K2P-USB
         - Phicomm_K2P
         default: Xiaoyu_C1
       plugins:
@@ -17,7 +16,7 @@ on:
       firmwarever:
         description: 'firmware''s version'
         required: true
-        default: '20240209'
+        default: '20240214'
 env:
   REPOSITORY_URL: https://github.com/tsl0922/padavan.git
   WORK_PATH: /opt/padavan-4.4
@@ -39,9 +38,6 @@ jobs:
         key: "${{ github.event.inputs.target }}"
         map: |
           {
-            "Phicomm_K2P-USB": {
-              "model": "K2P-USB"
-            },
             "Phicomm_K2P": {
               "model": "K2P"
             },
