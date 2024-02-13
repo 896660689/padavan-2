@@ -18,7 +18,7 @@ on:
         required: true
         default: '20240214'
 env:
-  REPOSITORY_URL: https://github.com/896660689/padavan-2/tree/214
+  REPOSITORY_URL: https://github.com/896660689/padavan-2.git
   WORK_PATH: /opt/padavan-4.4
   TIME_ZONE: Asia/Shanghai
   FIRMWARE_DATEPREFIX: $(date +"%Y%m%d")
@@ -68,7 +68,7 @@ jobs:
         sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
-        git clone --depth=1 $REPOSITORY_URL $WORK_PATH
+        git clone -b 214 --depth=1 $REPOSITORY_URL $WORK_PATH
         cd $WORK_PATH
         sed -i '/cp -f/d' Makefile
     - name: Parse json string of include plugins
