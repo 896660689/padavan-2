@@ -68,7 +68,7 @@ jobs:
         sudo timedatectl set-timezone "$TIME_ZONE"
     - name: Clone source code
       run: |
-        git clone -b 214 --depth=1 $REPOSITORY_URL $WORK_PATH
+        git clone -b main --depth=1 $REPOSITORY_URL $WORK_PATH
         cd $WORK_PATH
         sed -i '/cp -f/d' Makefile
     - name: Parse json string of include plugins
